@@ -48,12 +48,12 @@ class Calendriers extends BaseEntite
     {
         return $this->typeCalendriers;
     }
-    public function toArray(): array
+    public function toArray(array $exclude = []): array
     {
-        $data = parent::toArray();
+        $data = parent::toArray($exclude);
         $data['dateDebut'] = $this->getDateDebut()->format('Y-m-d');
         $data['dateFin'] = $this->getDateFin()->format('Y-m-d');
-        $data['typeCalendriers'] = $this->getTypeCalendriers()->toArray();
+        $data['typeCalendrier'] = $this->getTypeCalendriers()->toArray($exclude);
         return $data;
     }
 

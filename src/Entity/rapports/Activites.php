@@ -22,9 +22,9 @@ class Activites extends BaseNom
         $this->calendrierUtilisateur = $calendrierUtilisateur;
         return $this;
     }
-    public function toArray(): array
+    public function toArray(array $exclude = []): array
     {
-        $data = parent::toArray();
+        $data = parent::toArray($exclude);
         // $data['calendrierUtilisateur'] = $this->getCalendrierUtilisateur()->toArray();
         return $data;
     }

@@ -62,5 +62,21 @@ class CalendriersController extends BaseApiController
 			return $this->jsonError($e->getMessage(), 400);
 		}        
     }
+    #[Route('', name: 'api_get_calendriers', methods: ['GET'])]
+    #[TokenRequired]
+    public function getCalendriers(Request $request): JsonResponse
+    {
+        try {
+            $user = $this->getUserFromRequest($request);
+            $listeCalendriers = $this->service->getAll();
+            $exclude = ['createdAt','deletedAt'];
+            $listeCalendriersArray= $this->service->toArrayList($listeCalendriers,$exclude);
+            return $this->jsonSuccess($listeCalendriersArray);  
+            
+        } catch (\Throwable $e) {
+			return $this->jsonError($e->getMessage(), 400);
+		} 
+    }
+
 
 }

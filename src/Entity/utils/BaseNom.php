@@ -22,10 +22,10 @@ abstract class BaseNom extends BaseEntite
     }
 
     // Si tu veux inclure le nom dans le toArray() hérité
-    public function toArray(): array
-    {
-        $data = parent::toArray();
-        $data['name'] = $this->getName();
-        return $data;
-    }
+    // public function toArray(array $exclude = []): array
+    // {
+    //     $data = parent::toArray($exclude);
+    //     $data['name'] = $this->getName();
+    //     return $data;
+    // }
 }

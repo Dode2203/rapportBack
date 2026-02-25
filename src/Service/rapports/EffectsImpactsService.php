@@ -29,11 +29,11 @@ class EffectsImpactsService
     {
         return $this->repository->findByActivite($activite, $order);
     }
-    public function transformerArray(array $effectsImpacts): array
+    public function transformerArray(array $effectsImpacts, array $exclude = []): array
     {
         $result = [];
         foreach ($effectsImpacts as $index => $effectImpact) {
-            $result[$index] = $effectImpact->toArray();
+            $result[$index] = $effectImpact->toArray($exclude);
         }
         return $result;
     }

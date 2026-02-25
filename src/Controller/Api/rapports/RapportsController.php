@@ -76,6 +76,24 @@ class RapportsController extends BaseApiController
 			return $this->jsonError($e->getMessage(), 400);
 		} 
     }
+    #[Route('/calendrier', name: 'api_rapports_calendrier', methods: ['GET'])]
+    #[TokenRequired(['Admin'])]
+    public function getRapportByCalendrier(Request $request): JsonResponse
+    {
+        try {   
+            $idCalendrier = $request->query->get('idCalendrier');
+
+            if (!$idCalendrier) {
+                return $this->jsonError('Paramètre idCalendrier requis', 400);
+            }
+            $listeRapports = $this->cus->getByCalendrierId($idCalendrier);
+            $listeRapportsArray= $this->cus->transformerArray($listeRapports);
+            return $this->jsonSuccess($listeRapportsArray);
+            
+        } catch (\Throwable $e) {
+			return $this->jsonError($e->getMessage(), 400);
+		} 
+    }
 
 
 }

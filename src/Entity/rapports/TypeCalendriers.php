@@ -8,5 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: TypeCalendriersRepository::class)]
 class TypeCalendriers extends BaseNom
 {
+    public function toArray(array $exclude = []): array
+    {
+        $result = parent::toArray($exclude);
+        return $result;
+    }
     
 }

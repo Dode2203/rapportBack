@@ -29,7 +29,7 @@ class CalendriersService
      * Récupérer tous les calendriers actifs
      */
     
-    public function getAllActive(string $order = 'DESC'): array
+    public function getAll(string $order = 'DESC'): array
     {
         return $this->repository->findAllActive($order);
     }
@@ -79,12 +79,12 @@ class CalendriersService
 
         return $calendrier;
     }
-    public function toArrayList(array $calendriers): array
+    public function toArrayList(array $calendriers,array $exclude = []): array
     {
         $result = [];
 
         foreach ($calendriers as $index => $calendrier) {
-            $result[$index] = $calendrier->toArray();
+            $result[$index] = $calendrier->toArray($exclude);
         }
 
         return $result;

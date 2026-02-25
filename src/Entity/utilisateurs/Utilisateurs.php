@@ -68,10 +68,10 @@ class Utilisateurs extends BaseEntite
         return $this;
     }
 
-    public function toArray(): array
+    public function toArray(array $exclude = []): array
     {
-        $data = parent::toArray();
-        $data['entite'] = $this->getEntite();
+        $data = parent::toArray($exclude);
+        // $data['entite'] = $this->getEntite();
         $data['role'] = $this->getRole() ? $this->getRole()->getName() : null;
         return $data;
     }

@@ -30,13 +30,13 @@ class ActivitesService
     {
         return $this->activitesRepository->findByCalendrierUtilisateur($calendrierUtilisateur, $order);
     }
-    public function transformerArray(array $activites): array
+    public function transformerArray(array $activites, array $exclude = []): array
     {
         $result = [];
         foreach ($activites as $index => $activite) {
             $effectsImpacts = $this->effectsImpactsService->getByActivite($activite);
-            $result[$index] ['activite'] = $activite->toArray();
-            $result[$index]['effectsImpacts'] = $this->effectsImpactsService->transformerArray($effectsImpacts);
+            $result[$index] ['activite'] = $activite->toArray($exclude);
+            $result[$index]['effectsImpacts'] = $this->effectsImpactsService->transformerArray($effectsImpacts, $exclude);
         }
         return $result;
     }

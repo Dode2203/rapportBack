@@ -51,11 +51,11 @@ class EffectsImpacts extends BaseEntite
         $this->activite = $activite;
         return $this;
     }
-    public function toArray(): array
+    public function toArray(array $exclude = []): array
     {
-        $data = parent::toArray();
-        $data['effect'] = $this->getEffect();
-        $data['impact'] = $this->getImpact();
+        $data = parent::toArray($exclude);
+        // $data['effect'] = $this->getEffect();
+        // $data['impact'] = $this->getImpact();
         // $data['activite'] = $this->getActivite() ? $this->getActivite()->toArray() : [];
         return $data;
     }

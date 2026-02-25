@@ -34,11 +34,13 @@ class CalendriersUtilisateurs extends BaseEntite
         $this->calendrier = $calendrier;
         return $this;
     }
-    public function toArray(): array
+    public function toArray(array $exclude = []): array
     {
-        $data = parent::toArray();
-        $data['utilisateur'] = $this->getUtilisateur()->toArray();
-        $data['calendrier'] = $this->getCalendrier()->toArray();
+        $data = parent::toArray($exclude);
+        $excludeUtilisateur = array_merge($exclude, ['mdp','id']);
+        $excludeCalendrier = array_merge($exclude, ['id']);
+        $data['utilisateur'] = $this->getUtilisateur()->toArray($excludeUtilisateur);
+        $data['calendrier'] = $this->getCalendrier()->toArray($excludeCalendrier);
         return $data;
     }
     

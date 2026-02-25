@@ -69,10 +69,11 @@ class CalendriersUtilisateursService
     public function transformerArray(array $calendrierUtilisateurs): array
     {
         $result = [];
+        $exclude = ['deletedAt', 'createdAt'];
         foreach ($calendrierUtilisateurs as $index => $calendrierUtilisateur) {
             $activites = $this->activitesService->findByCalendrierUtilisateur($calendrierUtilisateur);
-            $result[$index] = $calendrierUtilisateur->toArray();
-            $result[$index]['activites'] = $this->activitesService->transformerArray($activites);
+            $result[$index] = $calendrierUtilisateur->toArray($exclude);
+            $result[$index]['activites'] = $this->activitesService->transformerArray($activites, $exclude);
         }
         return $result;
     }
@@ -110,6 +111,14 @@ class CalendriersUtilisateursService
             $this->em->rollback();
             throw $e;
         }
+    }
+    public function getByCalendrierId(int $idCalendrier,string $order = 'DESC'): array
+    {
+        $calendrier = $this->calendriersService->getById($idCalendrier);
+        if (!$calendrier) {
+            throw new Exception("Le calendrier n'existe pas pour id=" . $idCalendrier);
+        }
+        return $this->getByCalendrier($calendrier, $order);
     }
     
 

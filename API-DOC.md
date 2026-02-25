@@ -161,4 +161,81 @@
               }
           ]
       }
+#Pour avoir les listes des calendriers  
+  GET http://192.168.88.9:8000/calendriers      
+  #[TokenRequired(admin)]
+  methode get
+    response
+      {
+            "status": "success",
+            "data": [
+                {
+                    "dateDebut": "2026-01-01",
+                    "dateFin": "2026-01-31",
+                    "id": 1,
+                    "typeCalendrier": {
+                        "name": "Hebdomadaire",
+                        "id": 1
+                    }
+                }
+            ]
+        }
 
+#url pour get rapport
+  Get http://192.168.88.9:8000/rapports
+  #[TokenRequired]
+  Get http://192.168.88.9:8000/rapports/calendrier?idCalendrier=1
+  #[TokenRequired(admin)]
+  Reponse
+    {
+      "status": "success",
+      "data": [
+          {
+              "id": 17,
+              "utilisateur": {
+                  "role": "Admin"
+              },
+              "calendrier": {
+                  "dateDebut": "2026-01-01",
+                  "dateFin": "2026-01-31",
+                  "typeCalendrier": {
+                      "name": "Hebdomadaire"
+                  }
+              },
+              "activites": [
+                  {
+                      "activite": {
+                          "name": "Projet ERP",
+                          "id": 17
+                      },
+                      "effectsImpacts": [
+                          {
+                              "effect": "Retard livraison",
+                              "impact": "Décalage planning",
+                              "id": 1
+                          },
+                          {
+                              "effect": "Absence équipe",
+                              "impact": "Baisse productivité",
+                              "id": 2
+                          }
+                      ]
+                  },
+                  {
+                      "activite": {
+                          "name": "Projet CRM",
+                          "id": 18
+                      },
+                      "effectsImpacts": [
+                          {
+                              "effect": "Retard test",
+                              "impact": "Vody bobota",
+                              "id": 3
+                          }
+                      ]
+                  }
+              ]
+          }
+      ]
+  }
+    
