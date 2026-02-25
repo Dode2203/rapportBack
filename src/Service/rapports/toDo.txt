@@ -1,0 +1,10 @@
+insert Rapport
+    --transaction
+        insert CalendriersUtilisateurs
+        insert Activites
+        insert EffectsImpacts
+
+getAllCalendriersUtilisateurs(Utilisateur)
+getAllRapportsParUtilisateur(Utilisateur)
+getAllRapports()
+getByIdRapport(idRapport)
