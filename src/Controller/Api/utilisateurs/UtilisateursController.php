@@ -112,7 +112,7 @@ class UtilisateursController extends BaseApiController
     {
         $data = json_decode($request->getContent(), true);
 
-        $requiredFields = ['email', 'mdp'];
+        $requiredFields = ['email', 'password'];
         $missingFields = [];
 
         foreach ($requiredFields as $field) {
@@ -124,13 +124,13 @@ class UtilisateursController extends BaseApiController
         if (!empty($missingFields)) {
             return new JsonResponse([
                 'status' => 'error',
-                'message' => 'Champs requis manquants',
+                'message' => 'Champs requis manquants : ' . implode(', ', $missingFields),
                 'missingFields' => $missingFields
             ], 400);
         }
 
         $email = $data['email'];
-        $plainPassword = $data['mdp'];
+        $plainPassword = $data['password'];
 
 
         // 🔑 Vérification du login via le repository
@@ -154,8 +154,8 @@ class UtilisateursController extends BaseApiController
         $token = $this->jwtManager->createToken($claims, $tokenDuration);
         $tokenString = $token->toString();
         $data = [
-            'membre' => [
-                // 'id' => $user->getId(),
+            'user' => [
+                'id' => $user->getId(),
                 'email' => $user->getEmail(),
                 'role' => $user->getRole()->getName(), // ajouter role ici
                 'entite' => $user->getEntite()

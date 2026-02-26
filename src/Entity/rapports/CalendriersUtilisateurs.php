@@ -39,10 +39,11 @@ class CalendriersUtilisateurs extends BaseEntite
         $data = parent::toArray($exclude);
         $excludeUtilisateur = array_merge($exclude, ['mdp','id']);
         $excludeCalendrier = array_merge($exclude, ['id']);
-        $data['utilisateur'] = $this->getUtilisateur()->toArray($excludeUtilisateur);
+        $data['user'] = $this->getUtilisateur()->toArray($excludeUtilisateur);
         $data['calendrier'] = $this->getCalendrier()->toArray($excludeCalendrier);
         return $data;
     }
+    
     
     
 }

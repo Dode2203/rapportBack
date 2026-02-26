@@ -2,6 +2,7 @@
 
 namespace App\Service\rapports;
 
+use App\Dto\utils\OrderCriteria;
 use App\Entity\rapports\Calendriers;
 use App\Entity\rapports\TypeCalendriers;
 use App\Repository\rapports\CalendriersRepository;
@@ -29,17 +30,17 @@ class CalendriersService
      * Récupérer tous les calendriers actifs
      */
     
-    public function getAll(string $order = 'DESC'): array
+    public function getAll(OrderCriteria $criteria): array
     {
-        return $this->repository->findAllActive($order);
+        return $this->repository->findAllActive($criteria);
     }
 
     /**
      * Récupérer par type
      */
-    public function getByType(TypeCalendriers $type, string $order = 'DESC'): array
+    public function getByType(TypeCalendriers $type, OrderCriteria $criteria): array
     {
-        return $this->repository->findByType($type, $order);
+        return $this->repository->findByType($type, $criteria);
     }
 
     /**
@@ -48,9 +49,9 @@ class CalendriersService
     public function getBetweenDates(
         \DateTimeInterface $debut,
         \DateTimeInterface $fin,
-        string $order = 'ASC'
+        OrderCriteria $criteria
     ): array {
-        return $this->repository->findBetweenDates($debut, $fin, $order);
+        return $this->repository->findBetweenDates($debut, $fin, $criteria);
     }
 
     /**
@@ -101,4 +102,5 @@ class CalendriersService
         $this->em->flush();
         return $calendrier;
     }
+    
 }

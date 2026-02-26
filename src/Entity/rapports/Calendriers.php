@@ -56,6 +56,8 @@ class Calendriers extends BaseEntite
         $data['typeCalendrier'] = $this->getTypeCalendriers()->toArray($exclude);
         return $data;
     }
+    
+    
 
     
 }

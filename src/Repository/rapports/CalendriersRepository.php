@@ -6,7 +6,7 @@ use App\Entity\rapports\Calendriers;
 use App\Entity\rapports\TypeCalendriers;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-
+use App\Dto\utils\OrderCriteria;
 class CalendriersRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -17,29 +17,25 @@ class CalendriersRepository extends ServiceEntityRepository
     /**
      * Trouver tous les calendriers non supprimés
      */
-    public function findAllActive(string $order = 'DESC'): array
-    {
-        $order = strtoupper($order) === 'ASC' ? 'ASC' : 'DESC';
-
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.deletedAt IS NULL')
-            ->orderBy('c.dateDebut', $order)
-            ->getQuery()
-            ->getResult();
-    }
+public function findAllActive(OrderCriteria $criteria = new OrderCriteria()): array
+{
+    return $this->createQueryBuilder('c')
+        ->andWhere('c.deletedAt IS NULL')
+        ->orderBy('c.' . $criteria->getField(), $criteria->getDirection())
+        ->getQuery()
+        ->getResult();
+}
 
     /**
      * Trouver par type de calendrier
      */
-    public function findByType(TypeCalendriers $type, string $order = 'DESC'): array
+    public function findByType(TypeCalendriers $type, OrderCriteria $criteria = new OrderCriteria()): array
     {
-        $order = strtoupper($order) === 'ASC' ? 'ASC' : 'DESC';
-
         return $this->createQueryBuilder('c')
             ->andWhere('c.typeCalendriers = :type')
             ->andWhere('c.deletedAt IS NULL')
             ->setParameter('type', $type)
-            ->orderBy('c.dateDebut', $order)
+            ->orderBy('c.' . $criteria->getField(), $criteria->getDirection())
             ->getQuery()
             ->getResult();
     }
@@ -50,17 +46,15 @@ class CalendriersRepository extends ServiceEntityRepository
     public function findBetweenDates(
         \DateTimeInterface $debut,
         \DateTimeInterface $fin,
-        string $order = 'ASC'
+        OrderCriteria $criteria = new OrderCriteria()
     ): array {
-        $order = strtoupper($order) === 'DESC' ? 'DESC' : 'ASC';
-
         return $this->createQueryBuilder('c')
             ->andWhere('c.dateDebut >= :debut')
             ->andWhere('c.dateFin <= :fin')
             ->andWhere('c.deletedAt IS NULL')
             ->setParameter('debut', $debut)
             ->setParameter('fin', $fin)
-            ->orderBy('c.dateDebut', $order)
+            ->orderBy('c.' . $criteria->getField(), $criteria->getDirection())
             ->getQuery()
             ->getResult();
     }

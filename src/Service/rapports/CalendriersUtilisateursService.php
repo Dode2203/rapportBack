@@ -6,11 +6,10 @@ use App\Dto\rapports\ActiviteCollectionDto;
 use App\Entity\rapports\CalendriersUtilisateurs;
 use App\Entity\rapports\Calendriers;
 use App\Entity\utilisateurs\Utilisateurs;
-use App\Entity\rapports\Activites;
-use App\Entity\rapports\EffectsImpacts;
 use App\Repository\rapports\CalendriersUtilisateursRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use App\Dto\utils\OrderCriteria;
 
 class CalendriersUtilisateursService
 {
@@ -120,6 +119,26 @@ class CalendriersUtilisateursService
         }
         return $this->getByCalendrier($calendrier, $order);
     }
+    /**
+     * Récupérer tous les calendriers disponibles pour un utilisateur si le calendrier n'est pas dans la liste des calendriers utilisateur
+     */
+    public function getAllCalendrierDisponible(Utilisateurs $utilisateurs,array $listeCalendriers):array
+    {
+        $result = array();
+        foreach($listeCalendriers as $calendrier)
+        {
+            $calendrierUtilisateur = $this->getByCalendrierAndUtilisateur($utilisateurs, $calendrier);
+            if (!$calendrierUtilisateur) {
+                $result[] = $calendrier;
+            }
+        }
+        return $result;
+    }
+    public function getCalendrierDisponibleDate(Utilisateurs $utilisateurs,\DateTimeInterface $dateDebut,\DateTimeInterface $dateFin,OrderCriteria $criteria):array
+    {
+        return $this->calendriersService->getBetweenDates($dateDebut,$dateFin,$criteria);
+    }
+    
     
 
 }
