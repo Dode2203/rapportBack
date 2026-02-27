@@ -29,18 +29,18 @@
        --creer service TypeEffectImpact a ok --5mn
        
        
-   changerFonctionInsertRapport() -- a faire -- 25 mn
+   changerFonctionInsertRapport() -- a faire -- 40 mn
       --creer fonction insertAvecTypeEffectImpact() -- a ok -- 5mn
       --changer dtoEffectImpact() -- a ok -- 5mn
       --changer fonction insertRapportDto() -- a ok -- 10mn
       --verification insertListeEffectImpactDto() -- ok -- 5mn
-      --test api -- a faire -- 5mn
+      --test api et rectification-- a faire -- 15mn
    
    changer Entite CalendriersUtilisateurs avec dateValidation -- a faire -- 5mn
    
-   changerFonctionGetRapport() -- a faire -- 20 mn   
-      --changer apiGetRapport() -- a ok -- 5mn
-      --test api -- a faire -- 5mn
+   changerFonctionGetRapport() -- a faire -- 70 mn   
+      --changer apiGetRapport() -- a ok -- 10mn
+      --test api -- a faire -- 60mn
    
    modifier EffectsImpacts -- a faire -- 30 mn
    modifier Activite -- a faire -- 20 mn
@@ -48,3 +48,6 @@
    supprimer Activite -- a faire -- 20 mn
 
 
+--statistique dashboard -- a faire -- 30mn
+   --getAllUtilisateurActive() -- a faire -- 10mn
+   --getAllUtilisateurRetardParCalendrier() -- a faire -- 10mn

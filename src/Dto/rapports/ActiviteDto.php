@@ -15,8 +15,12 @@ class ActiviteDto
     /** @var EffectImpactDto[] */
     #[Assert\NotNull(message: "La liste des activités ne peut pas être nulle.")]
     #[Count(min: 1, minMessage: "Vous devez fournir au moins une activité.")]
-    public array $effects = [];
 
+    /** @var EffectImpactDto[] */
+    #[Assert\NotNull]
+    public array $effects = [];
+    /** @var EffectImpactDto[] */
+    #[Assert\NotNull]
     public array $impacts = [];
 
     public function getActivite(): ?string
@@ -37,27 +41,28 @@ class ActiviteDto
     {
         return $this->effects;
     }
+    
     public function getImpacts(): array
     {
         return $this->impacts;
     }
 
     /**
-     * @param EffectImpactDto[] $effectsImpacts
+     * @param EffectImpactDto[] $effects
      */
-    public function setEffects(array $effetsImpacts): self
+    public function setEffects(array $effects): self
     {
-        $this->effetsImpacts = $effetsImpacts;
+        $this->effects = $effects;
         return $this;
     }
-    public function setImpacts(array $effetsImpacts): self
+    public function setImpacts(array $impacts): self
     {
-        $this->effetsImpacts = $effetsImpacts;
+        $this->impacts = $impacts;
         return $this;
     }
 
     /**
-     * Ajouter un effetImpact
+     * Ajouter un effet
      */
     public function addEffect(EffectImpactDto $effectImpactDto): self
     {

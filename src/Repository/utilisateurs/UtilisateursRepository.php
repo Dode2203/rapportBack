@@ -4,7 +4,8 @@ namespace App\Repository\utilisateurs;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use App\Entity\utilisateurs\Utilisateurs;
 use Doctrine\Persistence\ManagerRegistry;
-
+use App\Entity\rapports\Calendriers;
+use App\Dto\utils\OrderCriteria;
 /**
  * @extends ServiceEntityRepository<Utilisateurs>
  */
@@ -49,15 +50,38 @@ class UtilisateursRepository extends ServiceEntityRepository
 
         return null; 
     }
-    public function getAllParOrdre(): array
+    public function getAllParOrdre(OrderCriteria $criteria): array
        {
            return $this->createQueryBuilder('u')
                
-               ->orderBy('u.createdAt', 'ASC')
+               ->orderBy('u.'.$criteria->getField(), $criteria->getDirection())
+               ->where('u.deletedAt IS NULL')
                ->getQuery()
                ->getResult()
            ;
        }
+     /**
+     * Retourne tous les utilisateurs qui ne sont pas liés au calendrier donné
+     *
+     * @param Calendriers $calendrier
+     * @return Utilisateurs[]
+     */
+    public function findUsersNotInCalendrier(Calendriers $calendrier): array
+    {
+        $subQb = $this->getEntityManager()->createQueryBuilder()
+            ->select('IDENTITY(cu2.utilisateur)')
+            ->from('App\Entity\rapports\CalendriersUtilisateurs', 'cu2')
+            ->where('cu2.calendrier = :calendrier');
+
+        $qb = $this->createQueryBuilder('u');
+
+        $qb->where(
+            $qb->expr()->notIn('u.id', $subQb->getDQL())
+        )
+        ->setParameter('calendrier', $calendrier);
+
+        return $qb->getQuery()->getResult();
+    }
     
 
 }

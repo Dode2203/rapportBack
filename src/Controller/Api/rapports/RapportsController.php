@@ -55,7 +55,8 @@ class RapportsController extends BaseApiController
             }
             $user = $this->getUserFromRequest($request);
             
-            $rapportInsertArray = $this->cus->insertRapportDto($user, $dto);
+            $rapportInsert = $this->cus->insertRapportDto($user, $dto);
+            $rapportInsertArray = $rapportInsert->toArray();
             return $this->jsonSuccess($rapportInsertArray);
 
         } catch (\Throwable $e) {

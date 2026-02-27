@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Annotation\TokenRequired;
 use App\Dto\utilisateurs\UtilisateurDto;
+use App\Dto\utils\OrderCriteria;
 
 #[Route('/utilisateurs')]
 class UtilisateursController extends BaseApiController
@@ -19,16 +20,13 @@ class UtilisateursController extends BaseApiController
     {
         try {
 
-            $usersArray = $this->utilisateursService->getAllUsersArray();
+            $utilisateurs = $this->utilisateursService->getAllUsers(new OrderCriteria());
+            $exclude = ['createdAt','deletedAt','mdp'];
+            $usersArray = $this->utilisateursService->transformerArray($utilisateurs,$exclude);
 
             return $this->jsonSuccess($usersArray);
 
         } catch (\Throwable $e) {
-
-            if ($e->getMessage() === 'Inactif') {
-                return $this->jsonError("Utilisateur inactif", 401);
-            }
-
             return $this->jsonError($e->getMessage(), 400);
         }
     }
@@ -74,7 +72,7 @@ class UtilisateursController extends BaseApiController
 		}        
     }
 
-    #[Route('/{id}', name: 'api_utilisateur_get_one', methods: ['GET'])]
+    #[Route('/{id}', name: 'api_utilisateur_get_one', methods: ['GET'],requirements: ['id' => '\d+'])]
     #[TokenRequired(['Admin'])]
     public function getOneUser(int $id): JsonResponse
     {
@@ -163,5 +161,25 @@ class UtilisateursController extends BaseApiController
             'token' => $tokenString
         ];
         return $this->jsonSuccess($data);
+    }
+    #[Route('/calendrierRetard', name: 'user_calendrier_retard', methods: ['GET'])]
+    // #[TokenRequired(['Admin'])]
+    public function getUtilisateurCalendrierRetard(Request $request): JsonResponse
+    {
+        try {
+            $idCalendrier = $request->query->get('idCalendrier');
+
+            if (!$idCalendrier) {
+                return $this->jsonError('Paramètre idCalendrier requis', 400);
+            }
+            $utilisateurs = $this->utilisateursService->getUsersNotInCalendrierId($idCalendrier);
+            $exclude = ['createdAt','deletedAt','mdp'];
+            $usersArray = $this->utilisateursService->transformerArray($utilisateurs,$exclude);
+
+            return $this->jsonSuccess($usersArray);
+
+        } catch (\Throwable $e) {
+            return $this->jsonError($e->getMessage(), 400);
+        }
     }
 }
