@@ -21,7 +21,7 @@
    getAllCalendrier(dateDebut,dateFin) -- ok -- 20 mn
 
 28/02/2026
-   generalisationCode() -- a faire -- 30 mn
+   generalisationCode() -- a ok -- 30 mn
    changerEffectsImpacts() -- a faire -- 20 mn
        --creer entity TypeEffectImpact a ok --5mn --2mn
        --modifier EffectsImpacts a ok --5mn
@@ -33,11 +33,15 @@
       --creer fonction insertAvecTypeEffectImpact() -- a ok -- 5mn
       --changer dtoEffectImpact() -- a ok -- 5mn
       --changer fonction insertRapportDto() -- a ok -- 10mn
-      --verification insertListeEffectImpactDto() -- a faire -- 5mn
+      --verification insertListeEffectImpactDto() -- ok -- 5mn
+      --test api -- a faire -- 5mn
    
    changer Entite CalendriersUtilisateurs avec dateValidation -- a faire -- 5mn
    
    changerFonctionGetRapport() -- a faire -- 20 mn   
+      --changer apiGetRapport() -- a ok -- 5mn
+      --test api -- a faire -- 5mn
+   
    modifier EffectsImpacts -- a faire -- 30 mn
    modifier Activite -- a faire -- 20 mn
    supprimer EffectsImpacts -- a faire -- 20 mn

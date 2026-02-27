@@ -145,6 +145,21 @@ class CalendriersUtilisateursService
         $calendriers = $this->calendriersService->getBetweenDates($dateDebut,$dateFin,$criteria);
         return $this->getAllCalendrierDisponible($utilisateurs,$calendriers);
     }
+    public function getById(int $idCalendrierUtilisateur): CalendriersUtilisateurs
+    {
+        return $this->repository->findActiveById($idCalendrierUtilisateur);
+    }
+    public function validateCalendrierUtilsateur(int $idCalendrierUtilisateur): CalendriersUtilisateurs
+    {
+        $calendrierUtilisateur = $this->getById($idCalendrierUtilisateur);
+        if (!$calendrierUtilisateur) {
+            throw new Exception("Le calendrier utilisateur n'existe pas pour id=" . $idCalendrierUtilisateur);
+        }
+        $calendrierUtilisateur->setDateValidation(new \DateTime());
+        $this->em->persist($calendrierUtilisateur);
+        $this->em->flush();
+        return $calendrierUtilisateur;
+    }
     
     
     

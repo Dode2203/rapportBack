@@ -33,9 +33,10 @@ class EffectsImpacts extends BaseNom
     {
         return $this->typeEffectImpact;
     }
-    public function toArray(array $exclude = []): array
-    {
-        $data = parent::toArray($exclude);
-        $data['activite'] = $this->getActivite() ? $this->getActivite()->toArray() : [];        return $data;
-    }
+    // public function toArray(array $exclude = []): array
+    // {
+    //     $data = parent::toArray($exclude);
+    //     // $data['activite'] = $this->getActivite() ? $this->getActivite()->toArray() : [];        
+    //     return $data;
+    // }
 }

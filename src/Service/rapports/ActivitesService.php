@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\rapports\CalendriersUtilisateurs;
 use App\Service\rapports\EffectsImpactsService;
 use App\Entity\rapports\Activites;
-
+use App\Dto\utils\OrderCriteria;
 class ActivitesService
 {
     private EntityManagerInterface $em;
@@ -34,9 +34,11 @@ class ActivitesService
     {
         $result = [];
         foreach ($activites as $index => $activite) {
-            $effectsImpacts = $this->effectsImpactsService->getByActivite($activite);
+            $impacts = $this->effectsImpactsService->getByActiviteTypeId($activite, 1,new OrderCriteria());
+            $effects = $this->effectsImpactsService->getByActiviteTypeId($activite, 2,new OrderCriteria());
             $result[$index] ['activite'] = $activite->toArray($exclude);
-            $result[$index]['effectsImpacts'] = $this->effectsImpactsService->transformerArray($effectsImpacts, $exclude);
+            $result[$index]['impacts'] = $this->effectsImpactsService->transformerArray($impacts, $exclude);
+            $result[$index]['effects'] = $this->effectsImpactsService->transformerArray($effects, $exclude);
         }
         return $result;
     }

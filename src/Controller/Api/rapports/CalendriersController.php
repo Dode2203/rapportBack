@@ -67,7 +67,7 @@ class CalendriersController extends BaseApiController
     }
     #[Route('', name: 'api_get_calendriers', methods: ['GET'])]
     // #[TokenRequired]
-    public function getCalendriers(Request $request): JsonResponse
+    public function getCalendriers(): JsonResponse
     {
         try {
             $listeCalendriers = $this->service->getAll(new OrderCriteria());

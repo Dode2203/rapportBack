@@ -2,6 +2,7 @@
 
 namespace App\Service\rapports;
 
+use App\Dto\utils\OrderCriteria;
 use App\Entity\rapports\Activites;
 use App\Repository\rapports\EffectsImpactsRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,9 +30,9 @@ class EffectsImpactsService
         return $effectImpact;
     }
     
-    public function getByActivite(Activites $activite, string $order = 'DESC'): array
+    public function getByActivite(Activites $activite, OrderCriteria $criteria): array
     {
-        return $this->repository->findByActivite($activite, $order);
+        return $this->repository->findByActivite($activite, $criteria);
     }
     public function transformerArray(array $effectsImpacts, array $exclude = []): array
     {
@@ -53,6 +54,18 @@ class EffectsImpactsService
             throw new \InvalidArgumentException("Le type d'effet d'impact n'existe pas pour id=" . $idTypeEffectImpact);
         }
         return $this->insertType($effectImpact, $typeEffectImpact);
+    }
+    public function getByActiviteType(Activites $activite,TypeEffectImpacts $typeEffectImpact,OrderCriteria $criteria): array
+    {
+        return $this->repository->findByActiviteType($activite,$typeEffectImpact,$criteria);
+    }
+    public function getByActiviteTypeId(Activites $activite,int $idTypeEffectImpact,OrderCriteria $criteria): array
+    {
+        $typeEffectImpact = $this->typeEffectImpactsService->getById($idTypeEffectImpact);
+        if (!$typeEffectImpact) {
+            throw new \InvalidArgumentException("Le type d'effet d'impact n'existe pas pour id=" . $idTypeEffectImpact);
+        }
+        return $this->getByActiviteType($activite,$typeEffectImpact,$criteria);
     }
 
     
