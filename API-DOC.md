@@ -65,25 +65,34 @@
       "idCalendrier": 1,
       "activites": [
         {
-          "activite": "Projet ERP",
-          "effectsImpacts": [
+          "activite": "Reboisement communautaire",
+          "effects": [
             {
-              "effect": "Retard livraison",
-              "impact": "Décalage planning"
+              "name": "Amélioration de la qualité de l'air"
             },
             {
-              "effect": "Absence équipe",
-              "impact": "Baisse productivité"
+              "name": "Réduction de l'érosion des sols"
+            }
+          ],
+          "impacts": [
+            {
+              "name": "Augmentation de la biodiversité"
+            },
+            {
+              "name": "Sensibilisation environnementale de la population"
             }
           ]
         },
         {
-          "activite": "Projet CRM",
-          "effectsImpacts": [
-            {
-              "effect": "Retard test",
-              "impact": "Vody bobota"
-            }
+          "activite": "Campagne de sensibilisation environnementale",
+          "effects": [
+            { "name": "Augmentation de la sensibilisation" },
+            { "name": "Changement de comportement des citoyens" },
+            { "name": "Réduction des déchets plastiques" }
+          ],
+          "impacts": [
+            { "name": "Amélioration de la propreté urbaine" },
+            { "name": "Diminution de la pollution" }
           ]
         }
       ]
@@ -239,3 +248,26 @@
       ]
   }
     
+
+#Pour recuperer les utilisateur qui n'ont pas de calendrier
+    Url
+      Get http://192.168.88.9:8000/utilisateurs/calendrierRetard?idCalendrier=2
+      #[TokenRequired(admin)]
+    Reponse
+      {
+          "status": "success",
+          "data": [
+              {
+                  "email": "admin@gmail.com",
+                  "entite": "Admin",
+                  "id": 1,
+                  "role": "Admin"
+              },
+              {
+                  "email": "test@gmail.com",
+                  "entite": "SP",
+                  "id": 2,
+                  "role": "Utilisateur"
+              }
+          ]
+      }

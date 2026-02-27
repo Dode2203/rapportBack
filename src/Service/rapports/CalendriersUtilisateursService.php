@@ -83,8 +83,9 @@ class CalendriersUtilisateursService
     private function insertListeEffectImpactDto(array $effectImpactDtos,Activites $activite,int $typeEffectImpactId): void
     {
         foreach ($effectImpactDtos as $effectImpactDto) {
-            $effectImpactDto->setActivite($activite);
-            $this->effectsImpactsService->insertTypeId($effectImpactDto, $typeEffectImpactId);
+            $effectImpactClass = $effectImpactDto->getEffectsImpactsClass();
+            $effectImpactClass->setActivite($activite);
+            $this->effectsImpactsService->insertTypeId($effectImpactClass, $typeEffectImpactId);
         }
     }
     public function insertRapportDto(Utilisateurs $utilisateur, ActiviteCollectionDto $activiteCollectionDto): CalendriersUtilisateurs

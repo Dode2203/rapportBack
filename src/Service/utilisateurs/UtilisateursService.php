@@ -8,20 +8,24 @@ use App\Repository\utilisateurs\RolesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\utilisateurs\UtilisateursRepository;
 use Exception;
-
+use App\Entity\rapports\Calendriers;
+use App\Dto\utils\OrderCriteria;
+use App\Service\rapports\CalendriersService;
 class UtilisateursService
 {
     private EntityManagerInterface $em;
 
     private UtilisateursRepository $utilisateurRepository;
     private RolesRepository $roleRepository;
+    private CalendriersService $calendrierService;
 
 
-    public function __construct(EntityManagerInterface $em, UtilisateursRepository $utilisateurRepository, RolesRepository $roleRepository)
+    public function __construct(EntityManagerInterface $em, UtilisateursRepository $utilisateurRepository, RolesRepository $roleRepository, CalendriersService $calendrierService)
     {
         $this->em = $em;
         $this->utilisateurRepository = $utilisateurRepository;
         $this->roleRepository = $roleRepository;
+        $this->calendrierService = $calendrierService;
     }
 
     /**
@@ -41,9 +45,9 @@ class UtilisateursService
 
         return $user;
     }
-    public function getAllUsers(): array
+    public function getAllUsers(OrderCriteria $criteria): array
     {
-        return $this->utilisateurRepository->getAllParOrdre();
+        return $this->utilisateurRepository->getAllParOrdre($criteria);
     }
     public function getUserById(int $id): ?Utilisateurs
     {
@@ -105,18 +109,15 @@ class UtilisateursService
 
         return $user;
     }
-    public function transformerArray(array $utilisateurs): array
+    public function transformerArray(array $utilisateurs,array $exclude = []): array
     {
         $result = [];
         foreach ($utilisateurs as $index => $utilisateur) {
-            $result[$index] = $utilisateur->toArray();
+            $result[$index] = $utilisateur->toArray($exclude);
         }
         return $result;
     }
-    public function getAllUsersArray(): array
-    {
-        return $this->transformerArray($this->getAllUsers());
-    }
+
     public function insertDto(UtilisateurDto $utilisateurDto): Utilisateurs{
         $result = new Utilisateurs();
         $result->setEmail($utilisateurDto->getEmail());
@@ -134,6 +135,18 @@ class UtilisateursService
     {
         $result = $this->getUserById($id);
         return $result->toArray();
+    }
+    public function getUsersNotInCalendrier(Calendriers $calendrier): array
+    {
+        return $this->utilisateurRepository->findUsersNotInCalendrier($calendrier);
+    }   
+    public function getUsersNotInCalendrierId($calendrierId): array
+    {
+        $calendrier = $this->calendrierService->getById($calendrierId);
+        if (!$calendrier) {
+            throw new Exception("Calendrier non trouvé pour id=" . $calendrierId);
+        }
+        return $this->utilisateurRepository->findUsersNotInCalendrier($calendrier);
     }
 
 }
