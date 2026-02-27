@@ -248,3 +248,26 @@
       ]
   }
     
+
+#Pour recuperer les utilisateur qui n'ont pas de calendrier
+    Url
+      Get http://192.168.88.9:8000/utilisateurs/calendrierRetard?idCalendrier=2
+      #[TokenRequired(admin)]
+    Reponse
+      {
+          "status": "success",
+          "data": [
+              {
+                  "email": "admin@gmail.com",
+                  "entite": "Admin",
+                  "id": 1,
+                  "role": "Admin"
+              },
+              {
+                  "email": "test@gmail.com",
+                  "entite": "SP",
+                  "id": 2,
+                  "role": "Utilisateur"
+              }
+          ]
+      }
