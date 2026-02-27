@@ -2,44 +2,17 @@
 
 namespace App\Entity\rapports;
 
-use App\Entity\utils\BaseEntite;
+use App\Entity\utils\BaseNom;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EffectsImpactsRepository::class)]
-class EffectsImpacts extends BaseEntite
+class EffectsImpacts extends BaseNom
 {
-
-    #[ORM\Column(type: "text", nullable: true)]
-    private ?string $effect = null;
-
-    #[ORM\Column(type: "text", nullable: true)]
-    private ?string $impact = null;
-
     #[ORM\ManyToOne(targetEntity: Activites::class)]
     private ?Activites $activite = null;
 
-
-    public function getEffect(): ?string
-    {
-        return $this->effect;
-    }
-
-    public function setEffect(?string $effect): self
-    {
-        $this->effect = $effect;
-        return $this;
-    }
-
-    public function getImpact(): ?string
-    {
-        return $this->impact;
-    }
-
-    public function setImpact(?string $impact): self
-    {
-        $this->impact = $impact;
-        return $this;
-    }
+    #[ORM\ManyToOne(targetEntity: TypeEffectImpacts::class)]
+    private ?TypeEffectImpacts $typeEffectImpact = null;
 
     public function getActivite(): ?Activites
     {
@@ -51,12 +24,18 @@ class EffectsImpacts extends BaseEntite
         $this->activite = $activite;
         return $this;
     }
+    public function setTypeEffectImpact(?TypeEffectImpacts $typeEffectImpact): self
+    {
+        $this->typeEffectImpact = $typeEffectImpact;
+        return $this;
+    }
+    public function getTypeEffectImpact(): ?TypeEffectImpacts
+    {
+        return $this->typeEffectImpact;
+    }
     public function toArray(array $exclude = []): array
     {
         $data = parent::toArray($exclude);
-        // $data['effect'] = $this->getEffect();
-        // $data['impact'] = $this->getImpact();
-        // $data['activite'] = $this->getActivite() ? $this->getActivite()->toArray() : [];
-        return $data;
+        $data['activite'] = $this->getActivite() ? $this->getActivite()->toArray() : [];        return $data;
     }
 }

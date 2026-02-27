@@ -30,9 +30,9 @@ class TypeCalendriersService
         return $this->repository->findActiveById($id);
     }
 
-    public function getByNom(string $nom): ?TypeCalendriers
+    public function getByName(string $name): ?TypeCalendriers
     {
-        return $this->repository->findOneByNom($nom);
+        return $this->repository->findOneByName($name);
     }
 
 }

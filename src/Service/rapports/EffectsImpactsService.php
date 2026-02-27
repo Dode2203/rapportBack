@@ -6,17 +6,21 @@ use App\Entity\rapports\Activites;
 use App\Repository\rapports\EffectsImpactsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\rapports\EffectsImpacts;
+use App\Entity\rapports\TypeEffectImpacts;
 class EffectsImpactsService
 {
     private EffectsImpactsRepository $repository;
     private EntityManagerInterface $em;
+    private TypeEffectImpactsService $typeEffectImpactsService;
 
     public function __construct(
         EffectsImpactsRepository $repository,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        TypeEffectImpactsService $typeEffectImpactsService
     ) {
         $this->repository = $repository;
         $this->em = $em;
+        $this->typeEffectImpactsService = $typeEffectImpactsService;
     }
     public function insert(EffectsImpacts $effectImpact): EffectsImpacts
     {
@@ -36,6 +40,19 @@ class EffectsImpactsService
             $result[$index] = $effectImpact->toArray($exclude);
         }
         return $result;
+    }
+    public function insertType(EffectsImpacts $effectImpact, TypeEffectImpacts $typeEffectImpact): EffectsImpacts
+    {
+        $effectImpact->setTypeEffectImpact($typeEffectImpact);
+        return $this->insert($effectImpact);
+    }
+    public function insertTypeId(int $idTypeEffectImpact, EffectsImpacts $effectImpact): EffectsImpacts
+    {
+        $typeEffectImpact = $this->typeEffectImpactsService->getById($idTypeEffectImpact);
+        if (!$typeEffectImpact) {
+            throw new \InvalidArgumentException("Le type d'effet d'impact n'existe pas pour id=" . $idTypeEffectImpact);
+        }
+        return $this->insertType($effectImpact, $typeEffectImpact);
     }
 
     

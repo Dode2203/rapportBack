@@ -1,14 +1,42 @@
-generalisationCode() -- a faire -- 30 mn
+26/02/2026
+   generalisationCode() -- ok -- 60mn
+   insert Rapport
+      --transaction
+         insert CalendriersUtilisateurs
+         insert Activites
+         insert EffectsImpacts
 
-getCalendrierDisponibleParUtilisateur() -- a faire -- 30 mn
-   --getAllCalendrierDisponible() -- a ok -- 10 mn
-   --getCalendrierDisponibleParUtilisateur() -- ok -- 10 mn
-   --apiCalendrierUtilsateurDisponible() -- a faire -- 10 mn
+   getAllCalendriersUtilisateurs(Utilisateur)
+   getAllRapportsParUtilisateur(Utilisateur)
+   getAllRapports()
+   getByIdRapport(idRapport)
+27/02/2026
+   generalisationCode() -- a ok -- 30 mn
 
-getAllCalendrier(limit) -- a faire -- 20 mn
-modifier EffectsImpacts -- a faire -- 30 mn
-modifier Activite -- a faire -- 20 mn
-supprimer EffectsImpacts -- a faire -- 20 mn
-supprimer Activite -- a faire -- 20 mn
+   getCalendrierDisponibleParUtilisateur() -- a faire -- 30 mn
+      --getAllCalendrierDisponible() -- a ok -- 10 mn
+      --getCalendrierDisponibleParUtilisateur() -- ok -- 10 mn
+      --apiCalendrierUtilsateurDisponible() -- a faire -- 10 mn
+
+   getAllCalendrier(dateDebut,dateFin) -- ok -- 20 mn
+
+28/02/2026
+   generalisationCode() -- a faire -- 30 mn
+   changerEffectsImpacts() -- a faire -- 20 mn
+       --creer entity TypeEffectImpact a ok --5mn --2mn
+       --modifier EffectsImpacts a ok --5mn
+       --creer repository TypeEffectImpact a ok --5mn
+       --creer service TypeEffectImpact a ok --5mn
+       
+       
+   changerFonctionInsertRapport() -- a faire -- 20 mn
+      --creer fonction insertAvecTypeEffectImpact() -- a ok -- 5mn
+      --changer dtoEffectImpact() -- a faire -- 5mn
+      --changer fonction insertRapportDto() -- a faire -- 10mn
+   changerFonctionGetRapport() -- a faire -- 20 mn   
+   modifier EffectsImpacts -- a faire -- 30 mn
+   modifier Activite -- a faire -- 20 mn
+   supprimer EffectsImpacts -- a faire -- 20 mn
+   supprimer Activite -- a faire -- 20 mn
 
 

@@ -2,27 +2,26 @@
 
 namespace App\Repository\rapports;
 
-use App\Entity\rapports\TypeCalendriers;
+use App\Entity\rapports\TypeEffectImpacts;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-
-class TypeCalendriersRepository extends ServiceEntityRepository
+use App\Dto\utils\OrderCriteria;
+class TypeEffectImpactsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, TypeCalendriers::class);
+        parent::__construct($registry, TypeEffectImpacts::class);
     }
 
     /**
      * Récupérer tous les types non supprimés
      */
-    public function findAllActive(string $order = 'ASC'): array
+    public function findAllActive(OrderCriteria $orderCriteria): array
     {
-        $order = strtoupper($order) === 'DESC' ? 'DESC' : 'ASC';
-
+      
         return $this->createQueryBuilder('t')
             ->andWhere('t.deletedAt IS NULL')
-            ->orderBy('t.createdAt', $order)
+            ->orderBy('t.'.$orderCriteria->getField(), $orderCriteria->getOrder())
             ->getQuery()
             ->getResult();
     }
@@ -30,7 +29,7 @@ class TypeCalendriersRepository extends ServiceEntityRepository
     /**
      * Trouver par nom
      */
-    public function findOneByName(string $name): ?TypeCalendriers
+    public function findOneByName(string $name): ?TypeEffectImpacts
     {
         return $this->createQueryBuilder('t')
             ->andWhere('LOWER(t.name) = LOWER(:name)')
@@ -43,7 +42,7 @@ class TypeCalendriersRepository extends ServiceEntityRepository
     /**
      * Trouver un type actif par ID
      */
-    public function findActiveById(int $id): ?TypeCalendriers
+    public function findActiveById(int $id): ?TypeEffectImpacts
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.id = :id')
