@@ -6,35 +6,23 @@ use App\Entity\rapports\EffectsImpacts;
 
 class EffectImpactDto
 {
-    public ?string $effect = null;
-    public ?string $impact = null;
-
-    public function getEffect(): ?string
+    public ?string $name = null;
+    
+    public function getName(): ?string
     {
-        return $this->effect;
+        return $this->name;
     }
 
-    public function setEffect(?string $effect): self
+    public function setName(?string $name): self
     {
-        $this->effect = $effect;
+        $this->name = $name;
         return $this;
     }
 
-    public function getImpact(): ?string
-    {
-        return $this->impact;
-    }
-
-    public function setImpact(?string $impact): self
-    {
-        $this->impact = $impact;
-        return $this;
-    }
     public function getEffectsImpactsClass(): EffectsImpacts
     {
         $result = new EffectsImpacts();
-        $result->setEffect($this->effect);
-        $result->setImpact($this->impact);
+        $result->setName($this->name);
         return $result;
     }
 }

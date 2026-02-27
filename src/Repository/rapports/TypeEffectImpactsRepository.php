@@ -21,7 +21,7 @@ class TypeEffectImpactsRepository extends ServiceEntityRepository
       
         return $this->createQueryBuilder('t')
             ->andWhere('t.deletedAt IS NULL')
-            ->orderBy('t.'.$orderCriteria->getField(), $orderCriteria->getOrder())
+            ->orderBy('t.'.$orderCriteria->getField(), $orderCriteria->getDirection())
             ->getQuery()
             ->getResult();
     }

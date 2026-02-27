@@ -8,6 +8,7 @@ use App\Entity\rapports\Calendriers;
 use App\Entity\utilisateurs\Utilisateurs;
 use App\Repository\rapports\CalendriersUtilisateursRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\rapports\Activites;
 use Exception;
 use App\Dto\utils\OrderCriteria;
 
@@ -76,7 +77,16 @@ class CalendriersUtilisateursService
         }
         return $result;
     }
-
+    /**
+     * Insert une liste d'effets d'impact
+     */
+    private function insertListeEffectImpactDto(array $effectImpactDtos,Activites $activite,int $typeEffectImpactId): void
+    {
+        foreach ($effectImpactDtos as $effectImpactDto) {
+            $effectImpactDto->setActivite($activite);
+            $this->effectsImpactsService->insertTypeId($effectImpactDto, $typeEffectImpactId);
+        }
+    }
     public function insertRapportDto(Utilisateurs $utilisateur, ActiviteCollectionDto $activiteCollectionDto): CalendriersUtilisateurs
     {
         $this->em->beginTransaction();
@@ -92,14 +102,10 @@ class CalendriersUtilisateursService
                 $activite = $activiteDto->getActiviteClass();
                 $activite->setCalendrierUtilisateur($calendrierUtilisateur);
                 $activite = $this->activitesService->insert($activite);
-
-                foreach ($activiteDto->getEffectsImpacts() as $effetImpactDto) {
-                    // throw new Exception(var_dump($effetImpactDto));
-                    $effetImpact = $effetImpactDto->getEffectsImpactsClass();
-                    $effetImpact->setActivite($activite);
-
-                    $this->effectsImpactsService->insert($effetImpact);
-                }
+                
+                #Pour insert liste impact et effet
+                $this->insertListeEffectImpactDto($activiteDto->getImpacts(), $activite, 1);
+                $this->insertListeEffectImpactDto($activiteDto->getEffects(), $activite, 2);
             }
 
             $this->em->commit();

@@ -3,16 +3,15 @@
 namespace App\Entity\rapports;
 use App\Entity\utils\BaseEntite;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\DBAL\Types\Types;
 use App\Entity\rapports\TypeCalendriers;
 
 #[ORM\Entity(repositoryClass: CalendriersRepository::class)]
 class Calendriers extends BaseEntite
 {
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ORM\Column(type: "datetime_immutable", nullable: true)]
     private ?\DateTimeInterface $dateDebut = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ORM\Column(type: "datetime_immutable", nullable: true)]
     private ?\DateTimeInterface $dateFin = null;
 
     #[ORM\ManyToOne(targetEntity: TypeCalendriers::class)]
@@ -51,8 +50,8 @@ class Calendriers extends BaseEntite
     public function toArray(array $exclude = []): array
     {
         $data = parent::toArray($exclude);
-        $data['dateDebut'] = $this->getDateDebut()->format('Y-m-d');
-        $data['dateFin'] = $this->getDateFin()->format('Y-m-d');
+        // $data['dateDebut'] = $this->getDateDebut()->format('Y-m-d');
+        // $data['dateFin'] = $this->getDateFin()->format('Y-m-d');
         $data['typeCalendrier'] = $this->getTypeCalendriers()->toArray($exclude);
         return $data;
     }

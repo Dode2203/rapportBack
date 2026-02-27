@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Entity\rapports;
-use App\Entity\utils\BaseEntite;
 use App\Entity\rapports\Calendriers;
 use App\Entity\utilisateurs\Utilisateurs;
+use App\Entity\utils\BaseValidation;
 use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: CalendriersUtilisateursRepository::class)]
-class CalendriersUtilisateurs extends BaseEntite
+class CalendriersUtilisateurs extends BaseValidation
 {
     #[ORM\ManyToOne(targetEntity: Utilisateurs::class)]
     #[ORM\JoinColumn(nullable: false)]

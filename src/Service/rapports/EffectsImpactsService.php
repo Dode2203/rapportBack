@@ -46,7 +46,7 @@ class EffectsImpactsService
         $effectImpact->setTypeEffectImpact($typeEffectImpact);
         return $this->insert($effectImpact);
     }
-    public function insertTypeId(int $idTypeEffectImpact, EffectsImpacts $effectImpact): EffectsImpacts
+    public function insertTypeId(EffectsImpacts $effectImpact,int $idTypeEffectImpact): EffectsImpacts
     {
         $typeEffectImpact = $this->typeEffectImpactsService->getById($idTypeEffectImpact);
         if (!$typeEffectImpact) {
