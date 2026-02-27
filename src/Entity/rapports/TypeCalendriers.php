@@ -13,5 +13,5 @@ class TypeCalendriers extends BaseNom
         $result = parent::toArray($exclude);
         return $result;
     }
-    
+
 }
