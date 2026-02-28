@@ -56,7 +56,7 @@ class Utilisateurs extends BaseEntite
         return $this;
     }
 
-    
+
     public function getRole(): ?Roles
     {
         return $this->role;
