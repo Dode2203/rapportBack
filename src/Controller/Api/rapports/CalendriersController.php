@@ -66,7 +66,7 @@ class CalendriersController extends BaseApiController
 		}        
     }
     #[Route('', name: 'api_get_calendriers', methods: ['GET'])]
-    // #[TokenRequired]
+    #[TokenRequired]
     public function getCalendriers(): JsonResponse
     {
         try {

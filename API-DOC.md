@@ -271,3 +271,23 @@
               }
           ]
       }
+
+Pour recuperer les calendrier disponible pour un utilisateur
+  Url
+    Get http://192.168.88.9:8000/calendriers/utilisateur
+    #[TokenRequired]
+  Reponse
+    {
+        "status": "success",
+        "data": [
+            {
+                "dateDebut": "2026-02-01 00:00:00",
+                "dateFin": "2026-02-07 00:00:00",
+                "id": 2,
+                "typeCalendrier": {
+                    "name": "Hebdomadaire",
+                    "id": 1
+                }
+            }
+        ]
+    }
