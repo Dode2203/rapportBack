@@ -95,6 +95,69 @@ class RapportsController extends BaseApiController
 			return $this->jsonError($e->getMessage(), 400);
 		} 
     }
+    #[Route('/changerValidation', name: 'api_rapports_changer_validation', methods: ['POST'])]
+    #[TokenRequired(['Admin'])]
+    public function changerValidation(Request $request): JsonResponse
+    {
+        try {  
+            $data = json_decode($request->getContent(), true);
+
+            $requiredFields = ['id'];
+            $this->validatorService->validateRequiredFields($data,$requiredFields);
+            $id = $data['id'];
+            if ($id) {
+                return $this->jsonError('Paramètre idCalendrier requis', 400);
+            }
+            $rapport = $this->cus->changerStatusValidation($id);
+            $rapportArray = $rapport->toArray();
+            return $this->jsonSuccess($rapportArray);
+            
+        } catch (\Throwable $e) {
+			return $this->jsonError($e->getMessage(), 400);
+		} 
+    }
+    #[Route('/{idCalendrier}', name: 'api_rapports_modifier', methods: ['PUT'])]
+    #[TokenRequired]
+    public function modifierRapport(int $idCalendrier, Request $request): JsonResponse
+    {
+        try {
+            $dto = $this->serializer->deserialize(
+                $request->getContent(),
+                ActiviteCollectionDto::class,
+                'json'
+            );
+
+            $errors = $this->validator->validate($dto);
+
+            if (count($errors) > 0) {
+                $messages = [];
+                foreach ($errors as $error) {
+                    $messages[] = sprintf(
+                        '%s : %s',
+                        $error->getPropertyPath(),
+                        $error->getMessage()
+                    );
+                }
+
+                return $this->jsonError(
+                    'Erreur de validation : ' . implode(' | ', $messages),
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            $user = $this->getUserFromRequest($request);
+
+            $rapportInsert = $this->cus->modifierRapport($user, $dto, $idCalendrier);
+
+            return $this->jsonSuccess($rapportInsert->toArray());
+
+        } catch (\Throwable $e) {
+            return $this->jsonError($e->getMessage(), 400);
+        }
+    }
+    
+
+    
 
 
 }

@@ -53,9 +53,17 @@
    --getAllUtilisateurRetardParCalendrier() -- a faire -- 10mn
 
 01/03/2026
-   --changement de l'api rapport -- a faire -- 20mn
-       --changement de la dto rapport -- a faire -- 10mn
+   --changement de l'api rapport -- a ok -- 20mn
+       --changement de la dto rapport -- a ok -- 10mn
        --changement de la fonction saveRapport -- ok -- 10mn
 02/03/2026
-   --changement de la generalisationCode() -- a faire -- 60mn
+   --changement de la generalisationCode() -- ok -- 60mn
+   --modifier status rapport 20 mn
+      --fonction pour changer status -- ok -- 5mn
+      --api pour valider ou annuler validation -- a ok 10 mn
+   --modification rapport -- a faire -- 30mn
+      --fonction pour modification -- a ok 15 mn
+      --api pour modification rapport -- a ok 10 mn
+      --test pour l'api modification rapport -- ok -- 5mn
+
 

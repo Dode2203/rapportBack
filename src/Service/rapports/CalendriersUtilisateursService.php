@@ -7,10 +7,12 @@ use App\Entity\rapports\CalendriersUtilisateurs;
 use App\Entity\rapports\Calendriers;
 use App\Entity\utilisateurs\Utilisateurs;
 use App\Repository\rapports\CalendriersUtilisateursRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\rapports\Activites;
 use Exception;
 use App\Dto\utils\OrderCriteria;
+use PhpParser\Node\Stmt\TryCatch;
 
 class CalendriersUtilisateursService
 {
@@ -50,6 +52,13 @@ class CalendriersUtilisateursService
         $this->em->persist($cu);
         $this->em->flush();
 
+        return $cu;
+    }
+    public function delete(CalendriersUtilisateurs $cu): CalendriersUtilisateurs
+    {
+        $cu->setDeletedAt(new \DateTimeImmutable());
+        $this->em->persist($cu);
+        $this->em->flush();
         return $cu;
     }
     public function getByCalendrierAndUtilisateur(Utilisateurs $utilisateur, Calendriers $calendrier): ?CalendriersUtilisateurs
@@ -150,16 +159,65 @@ class CalendriersUtilisateursService
     {
         return $this->repository->findActiveById($idCalendrierUtilisateur);
     }
-    public function validateCalendrierUtilsateur(int $idCalendrierUtilisateur): CalendriersUtilisateurs
+    public function existeCalendrier(int $idCalendrierUtilisateur): CalendriersUtilisateurs
     {
         $calendrierUtilisateur = $this->getById($idCalendrierUtilisateur);
-        if (!$calendrierUtilisateur) {
+        if (!$calendrierUtilisateur) {  
             throw new Exception("Le calendrier utilisateur n'existe pas pour id=" . $idCalendrierUtilisateur);
         }
-        $calendrierUtilisateur->setDateValidation(new \DateTime());
+        return $calendrierUtilisateur;
+    }
+    public function validateCalendrierUtilsateur(int $idCalendrierUtilisateur): CalendriersUtilisateurs
+    {
+        $calendrierUtilisateur = $this->existeCalendrier($idCalendrierUtilisateur);
+        $calendrierUtilisateur->setDateValidation(new \DateTimeImmutable());
         $this->em->persist($calendrierUtilisateur);
         $this->em->flush();
         return $calendrierUtilisateur;
+    }
+    public function changerStatusValidation(CalendriersUtilisateurs $calendrierUtilisateur): CalendriersUtilisateurs
+    {
+        if ($calendrierUtilisateur->getDateValidation()) {
+            $calendrierUtilisateur->setDateValidation(null);
+        }
+        else{
+            $calendrierUtilisateur->setDateValidation(new \DateTimeImmutable());
+        }
+        $this->em->persist($calendrierUtilisateur);
+        $this->em->flush();
+        return $calendrierUtilisateur;
+    }
+    public function changerStatusValidationId(int $idCalendrierUtilisateur): CalendriersUtilisateurs
+    {
+        $calendrierUtilisateur = $this->existeCalendrier($idCalendrierUtilisateur);
+        return $this->changerStatusValidation($calendrierUtilisateur);  
+    }
+    public function modifierRapport(Utilisateurs $utilisateur, ActiviteCollectionDto $activiteCollectionDto,int $idCalendrierUtilisateur):CalendriersUtilisateurs
+    {
+        $this->em->beginTransaction();
+        try {
+            $calendrierUtilisateur = $this->existeCalendrier($idCalendrierUtilisateur);
+            if ($calendrierUtilisateur->getDateValidation()) {
+                throw new Exception("Calendrier deja valider pour id =".$calendrierUtilisateur->getId());
+            }
+            $utilisateurOvaina= $calendrierUtilisateur->getUtilisateur();
+            $roleUtilsateurOvaina = $utilisateurOvaina->getRole()->getId();
+            $roleUtilisateur = $utilisateur->getRole()->getId();
+            $roleId = 2;// pour role utilisateur
+            if ($roleUtilisateur==$roleId&&$roleUtilsateurOvaina!= $roleUtilisateur) {
+                throw new Exception("Seule l'utilisateur conserner peut modifier son rapport");
+            }
+            $this->delete($calendrierUtilisateur);
+            
+            $result = $this->insertRapportDto($utilisateurOvaina,$activiteCollectionDto);
+            $this->em->commit();
+
+            return $result;
+        } catch (\Throwable $e) {
+            $this->em->rollback();
+            throw $e;
+        }
+        
     }
     
     

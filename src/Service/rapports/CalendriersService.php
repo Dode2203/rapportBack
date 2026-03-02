@@ -71,6 +71,9 @@ class CalendriersService
         TypeCalendriers $type
     ): Calendriers {
         $calendrier = new Calendriers();
+        if ($dateDebut > $dateFin) {
+            throw new \InvalidArgumentException("La date de début doit être antérieure ou egal à la date de fin.");
+        }   
         $calendrier->setDateDebut($dateDebut);
         $calendrier->setDateFin($dateFin);
         $calendrier->setTypeCalendriers($type);
