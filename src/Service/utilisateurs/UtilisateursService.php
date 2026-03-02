@@ -59,30 +59,29 @@ class UtilisateursService
         if (!$user) {
             throw new Exception('Utilisateur non trouvé pour id=' . $idUser);
         }
-        if (isset($data['prenom'])) {
-            $user->setPrenom($data['prenom']);
-        }
-
-        if (isset($data['nom'])) {
-            $user->setNom($data['nom']);
-        }
 
         if (isset($data['email'])) {
-            $user->setEmail($data['email']);
+            $newEmail = $data['email'];
+            if ($newEmail !== $user->getEmail()) {
+                $existingUser = $this->utilisateurRepository->findOneBy(['email' => $newEmail]);
+                if ($existingUser) {
+                    throw new \Exception('CONFLIT_EMAIL : Cet email est déjà attribué à un autre compte.');
+                }
+                $user->setEmail($newEmail);
+            }
         }
 
-        if (isset($data['adresse'])) {
-            $user->setAdresse($data['adresse']);
+        if (isset($data['entite'])) {
+            $user->setEntite($data['entite']);
         }
 
-        if (isset($data['role'])) {
-            $role = $this->roleRepository->findOneByName($data['role']);
+        if (isset($data['idRole'])) {
+            $role = $this->roleRepository->find($data['idRole']);
             if (!$role) {
-                throw new \InvalidArgumentException('Rôle introuvable');
+                throw new \InvalidArgumentException('Rôle introuvable pour l\'ID fourni');
             }
             $user->setRole($role);
         }
-
 
         if (isset($data['mdp']) && !empty($data['mdp'])) {
             $hashedPassword = password_hash($data['mdp'], PASSWORD_BCRYPT);
@@ -109,7 +108,7 @@ class UtilisateursService
 
         return $user;
     }
-    public function transformerArray(array $utilisateurs,array $exclude = []): array
+    public function transformerArray(array $utilisateurs, array $exclude = []): array
     {
         $result = [];
         foreach ($utilisateurs as $index => $utilisateur) {
@@ -118,7 +117,8 @@ class UtilisateursService
         return $result;
     }
 
-    public function insertDto(UtilisateurDto $utilisateurDto): Utilisateurs{
+    public function insertDto(UtilisateurDto $utilisateurDto): Utilisateurs
+    {
         $result = new Utilisateurs();
         $result->setEmail($utilisateurDto->getEmail());
         $result->setMdp($utilisateurDto->getMdp());
@@ -128,7 +128,7 @@ class UtilisateursService
             throw new Exception("Role non trouvé pour id=" . $utilisateurDto->getIdRole());
         }
         $result->setRole($role);
-        $result=$this->createUserByRole($result);
+        $result = $this->createUserByRole($result);
         return $result;
     }
     public function getUserByIdArray(int $id): array
@@ -139,7 +139,7 @@ class UtilisateursService
     public function getUsersNotInCalendrier(Calendriers $calendrier): array
     {
         return $this->utilisateurRepository->findUsersNotInCalendrier($calendrier);
-    }   
+    }
     public function getUsersNotInCalendrierId($calendrierId): array
     {
         $calendrier = $this->calendrierService->getById($calendrierId);
