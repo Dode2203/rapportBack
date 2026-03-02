@@ -41,6 +41,8 @@ class CalendriersUtilisateursRepository extends ServiceEntityRepository
         $order = strtoupper($order) === 'ASC' ? 'ASC' : 'DESC';
 
         return $this->createQueryBuilder('cu')
+            ->leftJoin('cu.utilisateur', 'u')      // 🔥 IMPORTANT
+            ->addSelect('u')                       // 🔥 IMPORTANT
             ->andWhere('cu.calendrier = :calendrier')
             ->andWhere('cu.deletedAt IS NULL')
             ->setParameter('calendrier', $calendrier)

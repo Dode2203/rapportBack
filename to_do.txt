@@ -52,7 +52,10 @@
    --getAllUtilisateurActive() -- a faire -- 10mn
    --getAllUtilisateurRetardParCalendrier() -- a faire -- 10mn
 
-29/02/2026
+01/03/2026
    --changement de l'api rapport -- a faire -- 20mn
        --changement de la dto rapport -- a faire -- 10mn
        --changement de la fonction saveRapport -- ok -- 10mn
+02/03/2026
+   --changement de la generalisationCode() -- a faire -- 60mn
+
