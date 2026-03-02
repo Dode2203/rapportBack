@@ -51,3 +51,8 @@
 --statistique dashboard -- a faire -- 30mn
    --getAllUtilisateurActive() -- a faire -- 10mn
    --getAllUtilisateurRetardParCalendrier() -- a faire -- 10mn
+
+29/02/2026
+   --changement de l'api rapport -- a faire -- 20mn
+       --changement de la dto rapport -- a faire -- 10mn
+       --changement de la fonction saveRapport -- ok -- 10mn

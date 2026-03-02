@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints\Count;
 class ActiviteDto
 {
     #[Assert\NotBlank(message: "L'activite est obligatoire.")]
-    public ?string $activite = null;
+    public ?EffectImpactDto $activite ;
 
     /** @var EffectImpactDto[] */
     #[Assert\NotNull(message: "La liste des activités ne peut pas être nulle.")]
@@ -23,12 +23,12 @@ class ActiviteDto
     #[Assert\NotNull]
     public array $impacts = [];
 
-    public function getActivite(): ?string
+    public function getActivite(): ?EffectImpactDto
     {
         return $this->activite;
     }
 
-    public function setActivite(?string $activite): self
+    public function setActivite(?EffectImpactDto $activite): self
     {
         $this->activite = $activite;
         return $this;
@@ -77,7 +77,7 @@ class ActiviteDto
     public function getActiviteClass(): Activites
     {
         $result = new Activites();
-        $result->setName($this->activite);
+        $result->setName($this->activite->getName());
         return $result;
     }
 }

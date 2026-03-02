@@ -62,29 +62,27 @@
   Post http://192.168.88.9:8000/rapports
   Body
     {
-      "idCalendrier": 1,
+      "idCalendrier": 2,
       "activites": [
         {
-          "activite": "Reboisement communautaire",
+          "activite": {
+            "name": "Reboisement communautaire",
+            "id": 30
+          },
           "effects": [
-            {
-              "name": "Amélioration de la qualité de l'air"
-            },
-            {
-              "name": "Réduction de l'érosion des sols"
-            }
+            { "name": "Amélioration de la qualité de l'air" },
+            { "name": "Réduction de l'érosion des sols" }
           ],
           "impacts": [
-            {
-              "name": "Augmentation de la biodiversité"
-            },
-            {
-              "name": "Sensibilisation environnementale de la population"
-            }
+            { "name": "Augmentation de la biodiversité" },
+            { "name": "Sensibilisation environnementale de la population" }
           ]
         },
         {
-          "activite": "Campagne de sensibilisation environnementale",
+          "activite": {
+            "name": "Campagne de sensibilisation environnementale",
+            "id": 31
+          },
           "effects": [
             { "name": "Augmentation de la sensibilisation" },
             { "name": "Changement de comportement des citoyens" },
@@ -93,6 +91,20 @@
           "impacts": [
             { "name": "Amélioration de la propreté urbaine" },
             { "name": "Diminution de la pollution" }
+          ]
+        },
+        {
+          "activite": {
+            "name": "Atelier de formation en gestion des déchets",
+            "id": 32
+          },
+          "effects": [
+            { "name": "Acquisition de bonnes pratiques" },
+            { "name": "Réduction des déchets industriels" }
+          ],
+          "impacts": [
+            { "name": "Meilleure gestion des ressources locales" },
+            { "name": "Réduction de la pollution environnementale" }
           ]
         }
       ]

@@ -50,8 +50,8 @@ class Calendriers extends BaseEntite
     public function toArray(array $exclude = []): array
     {
         $data = parent::toArray($exclude);
-        // $data['dateDebut'] = $this->getDateDebut()->format('Y-m-d');
-        // $data['dateFin'] = $this->getDateFin()->format('Y-m-d');
+        $data['dateDebut'] = $this->getDateDebut()->format('Y-m-d');
+        $data['dateFin'] = $this->getDateFin()->format('Y-m-d');
         $data['typeCalendrier'] = $this->getTypeCalendriers()->toArray($exclude);
         return $data;
     }
