@@ -74,7 +74,7 @@ abstract class BaseEntite
      */
     public function toArray(array $exclude = []): array
     {
-        $reflection = new \ReflectionClass($this);
+        $reflection = new \ReflectionClass(get_parent_class($this) ?: $this);
         $data = [];
 
         foreach ($reflection->getProperties() as $property) {
@@ -88,9 +88,9 @@ abstract class BaseEntite
             $property->setAccessible(true);
 
             // On vérifie si la propriété est initialisée
-            // if (!$property->isInitialized($this)) {
-            //     // continue;
-            // }
+            if (!$property->isInitialized($this)) {
+                // continue;
+            }
 
             $value = $property->getValue($this);
 
