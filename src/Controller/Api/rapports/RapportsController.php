@@ -78,7 +78,7 @@ class RapportsController extends BaseApiController
 		} 
     }
     #[Route('/calendrier', name: 'api_rapports_calendrier', methods: ['GET'])]
-    #[TokenRequired(['Admin'])]
+    // #[TokenRequired(['Admin'])]
     public function getRapportByCalendrier(Request $request): JsonResponse
     {
         try {   
