@@ -21,8 +21,8 @@ class UtilisateursController extends BaseApiController
         try {
 
             $utilisateurs = $this->utilisateursService->getAllUsers(new OrderCriteria());
-            $exclude = ['createdAt','deletedAt','mdp'];
-            $usersArray = $this->utilisateursService->transformerArray($utilisateurs,$exclude);
+            $exclude = ['createdAt', 'deletedAt', 'mdp'];
+            $usersArray = $this->utilisateursService->transformerArray($utilisateurs, $exclude);
 
             return $this->jsonSuccess($usersArray);
 
@@ -34,7 +34,7 @@ class UtilisateursController extends BaseApiController
     #[TokenRequired(['Admin'])]
     public function createUser(Request $request): JsonResponse
     {
-        
+
         try {
             $dto = $this->serializer->deserialize(
                 $request->getContent(),
@@ -63,16 +63,16 @@ class UtilisateursController extends BaseApiController
 
                 return $this->jsonError($erreurMessage, Response::HTTP_BAD_REQUEST);
             }
-            
+
             $userArray = $this->utilisateursService->insertDto($dto);
             return $this->jsonSuccess($userArray);
 
         } catch (\Throwable $e) {
-			return $this->jsonError($e->getMessage(), 400);
-		}        
+            return $this->jsonError($e->getMessage(), 400);
+        }
     }
 
-    #[Route('/{id}', name: 'api_utilisateur_get_one', methods: ['GET'],requirements: ['id' => '\d+'])]
+    #[Route('/{id}', name: 'api_utilisateur_get_one', methods: ['GET'], requirements: ['id' => '\d+'])]
     #[TokenRequired(['Admin'])]
     public function getOneUser(int $id): JsonResponse
     {
@@ -81,7 +81,7 @@ class UtilisateursController extends BaseApiController
         if (!$user) {
             return $this->jsonError("Utilisateur non trouvé", 404);
         }
-        $userArray= $user->toArray();
+        $userArray = $user->toArray();
         return $this->jsonSuccess($userArray);
     }
 
@@ -99,6 +99,9 @@ class UtilisateursController extends BaseApiController
             $user = $this->utilisateursService->updateUser($id, $data);
             return $this->jsonSuccess($user->toArray());
         } catch (\Exception $e) {
+            if (str_starts_with($e->getMessage(), 'CONFLIT_EMAIL')) {
+                return $this->jsonError('Cet email est déjà utilisé par un autre compte.', 409);
+            }
             return $this->jsonError($e->getMessage(), 400);
         }
     }
@@ -137,9 +140,9 @@ class UtilisateursController extends BaseApiController
         if (!$user) {
             return $this->jsonError('Identifiants invalides', 404);
         }
-        
-        
-        
+
+
+
         $claims = [
             'id' => $user->getId(),
             'email' => $user->getEmail(),
@@ -173,8 +176,8 @@ class UtilisateursController extends BaseApiController
                 return $this->jsonError('Paramètre idCalendrier requis', 400);
             }
             $utilisateurs = $this->utilisateursService->getUsersNotInCalendrierId($idCalendrier);
-            $exclude = ['createdAt','deletedAt','mdp'];
-            $usersArray = $this->utilisateursService->transformerArray($utilisateurs,$exclude);
+            $exclude = ['createdAt', 'deletedAt', 'mdp'];
+            $usersArray = $this->utilisateursService->transformerArray($utilisateurs, $exclude);
 
             return $this->jsonSuccess($usersArray);
 

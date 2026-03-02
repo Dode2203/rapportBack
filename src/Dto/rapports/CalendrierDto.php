@@ -55,6 +55,9 @@ class CalendrierDto
     public function toEntity(): Calendriers
     {
         $calendrier = new Calendriers();
+        if ($this->dateDebut >= $this->dateFin) {
+            throw new \InvalidArgumentException("La date de début doit être strictement antérieure à la date de fin.");
+        }
         $calendrier->setDateDebut($this->dateDebut);
         $calendrier->setDateFin($this->dateFin);
         return $calendrier;
