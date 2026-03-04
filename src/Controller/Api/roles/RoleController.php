@@ -21,7 +21,6 @@ class RoleController extends BaseApiController
             $data = array_map(function ($role) {
                 return [
                     'id' => $role->getId(),
-                    // 'code' => 'ROLE_' . strtoupper($role->getName()),
                     'nom' => $role->getName(),
                 ];
             }, $roles);
