@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\rapports\Activites;
 use Exception;
 use App\Dto\utils\OrderCriteria;
-use PhpParser\Node\Stmt\TryCatch;
+use App\Service\utilisateurs\UtilisateursService;
 
 class CalendriersUtilisateursService
 {
@@ -21,18 +21,21 @@ class CalendriersUtilisateursService
     private ActivitesService $activitesService;
     private CalendriersService $calendriersService;
     private EffectsImpactsService $effectsImpactsService;
+    private UtilisateursService $utilisateursService;
     public function __construct(
         CalendriersUtilisateursRepository $repository,
         EntityManagerInterface $em,
         ActivitesService $activitesService,
         CalendriersService $calendriersService,
-        EffectsImpactsService $effectsImpactsService
+        EffectsImpactsService $effectsImpactsService,
+        UtilisateursService $utilisateursService
     ) {
         $this->repository = $repository;
         $this->em = $em;
         $this->activitesService = $activitesService;
         $this->calendriersService = $calendriersService;
         $this->effectsImpactsService = $effectsImpactsService;
+        $this->utilisateursService = $utilisateursService;
     }
 
     /**
@@ -159,7 +162,7 @@ class CalendriersUtilisateursService
     {
         return $this->repository->findActiveById($idCalendrierUtilisateur);
     }
-    public function existeCalendrier(int $idCalendrierUtilisateur): CalendriersUtilisateurs
+    public function existeCalendrierUtilisateur(int $idCalendrierUtilisateur): CalendriersUtilisateurs
     {
         $calendrierUtilisateur = $this->getById($idCalendrierUtilisateur);
         if (!$calendrierUtilisateur) {  
@@ -169,7 +172,7 @@ class CalendriersUtilisateursService
     }
     public function validateCalendrierUtilsateur(int $idCalendrierUtilisateur): CalendriersUtilisateurs
     {
-        $calendrierUtilisateur = $this->existeCalendrier($idCalendrierUtilisateur);
+        $calendrierUtilisateur = $this->existeCalendrierUtilisateur($idCalendrierUtilisateur);
         $calendrierUtilisateur->setDateValidation(new \DateTimeImmutable());
         $this->em->persist($calendrierUtilisateur);
         $this->em->flush();
@@ -189,14 +192,14 @@ class CalendriersUtilisateursService
     }
     public function changerStatusValidationId(int $idCalendrierUtilisateur): CalendriersUtilisateurs
     {
-        $calendrierUtilisateur = $this->existeCalendrier($idCalendrierUtilisateur);
+        $calendrierUtilisateur = $this->existeCalendrierUtilisateur($idCalendrierUtilisateur);
         return $this->changerStatusValidation($calendrierUtilisateur);  
     }
     public function modifierRapport(Utilisateurs $utilisateur, ActiviteCollectionDto $activiteCollectionDto,int $idCalendrierUtilisateur):CalendriersUtilisateurs
     {
         $this->em->beginTransaction();
         try {
-            $calendrierUtilisateur = $this->existeCalendrier($idCalendrierUtilisateur);
+            $calendrierUtilisateur = $this->existeCalendrierUtilisateur($idCalendrierUtilisateur);
             if ($calendrierUtilisateur->getDateValidation()) {
                 throw new Exception("Calendrier deja valider pour id =".$calendrierUtilisateur->getId());
             }
@@ -219,8 +222,22 @@ class CalendriersUtilisateursService
         }
         
     }
-    
-    
-    
+    public function getByCalendrierAndUtilisateurDeletedAt(Utilisateurs $utilisateur, Calendriers $calendrier): array
+    {
+        return $this->repository->findOneByUtilisateurAndCalendrierDeletedAt($utilisateur, $calendrier);
+    }
+    public function getByCalendrierAndUtilisateurDeletedAtId(int $idUtilisateur, int $idCalendrier): array
+    {
+        $utilisateur = $this->utilisateursService->getUserById($idUtilisateur);
+        $calendrier = $this->calendriersService->getById($idCalendrier);
+        if (!$utilisateur) {
+            throw new Exception("Utilisateur non trouvé pour id=" . $idUtilisateur);
+        }
+        if (!$calendrier) {
+            throw new Exception("Calendrier non trouvé pour id=" . $idCalendrier);
+        }
+        return $this->repository->findOneByUtilisateurAndCalendrierDeletedAt($utilisateur, $calendrier);
+    }
 
+    
 }

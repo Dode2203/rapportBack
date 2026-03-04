@@ -76,4 +76,16 @@ class CalendriersUtilisateursRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+    public function findOneByUtilisateurAndCalendrierDeletedAt(Utilisateurs $utilisateur, Calendriers $calendrier,string $order = 'DESC'): array
+    {
+        return $this->createQueryBuilder('cu')
+            ->andWhere('cu.utilisateur = :utilisateur')
+            ->andWhere('cu.calendrier = :calendrier')
+            ->andWhere('cu.deletedAt IS NOT NULL')
+            ->setParameter('utilisateur', $utilisateur)
+            ->setParameter('calendrier', $calendrier)
+            ->orderBy('cu.createdAt', $order)
+            ->getQuery()
+            ->getResult();
+    }
 }

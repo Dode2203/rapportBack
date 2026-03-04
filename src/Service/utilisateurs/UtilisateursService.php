@@ -65,7 +65,7 @@ class UtilisateursService
             if ($newEmail !== $user->getEmail()) {
                 $existingUser = $this->utilisateurRepository->findOneBy(['email' => $newEmail]);
                 if ($existingUser) {
-                    throw new \Exception('CONFLIT_EMAIL : Cet email est déjà attribué à un autre compte.');
+                    throw new Exception('CONFLIT_EMAIL : Cet email est déjà attribué à un autre compte.');
                 }
                 $user->setEmail($newEmail);
             }

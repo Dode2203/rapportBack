@@ -105,10 +105,7 @@ class RapportsController extends BaseApiController
             $requiredFields = ['id'];
             $this->validatorService->validateRequiredFields($data,$requiredFields);
             $id = $data['id'];
-            if ($id) {
-                return $this->jsonError('Paramètre idCalendrier requis', 400);
-            }
-            $rapport = $this->cus->changerStatusValidation($id);
+            $rapport = $this->cus->changerStatusValidationId($id);
             $rapportArray = $rapport->toArray();
             return $this->jsonSuccess($rapportArray);
             
@@ -116,9 +113,9 @@ class RapportsController extends BaseApiController
 			return $this->jsonError($e->getMessage(), 400);
 		} 
     }
-    #[Route('/{idCalendrier}', name: 'api_rapports_modifier', methods: ['PUT'])]
+    #[Route('/{idCalendrierUtilisateur}', name: 'api_rapports_modifier', methods: ['PUT'])]
     #[TokenRequired]
-    public function modifierRapport(int $idCalendrier, Request $request): JsonResponse
+    public function modifierRapport(int $idCalendrierUtilisateur, Request $request): JsonResponse
     {
         try {
             $dto = $this->serializer->deserialize(
@@ -147,13 +144,37 @@ class RapportsController extends BaseApiController
 
             $user = $this->getUserFromRequest($request);
 
-            $rapportInsert = $this->cus->modifierRapport($user, $dto, $idCalendrier);
+            $rapportInsert = $this->cus->modifierRapport($user, $dto, $idCalendrierUtilisateur);
 
             return $this->jsonSuccess($rapportInsert->toArray());
 
         } catch (\Throwable $e) {
             return $this->jsonError($e->getMessage(), 400);
         }
+    }
+    #[Route('/deleted', name: 'api_rapports_get_deleted', methods: ['GET'])]
+    #[TokenRequired]
+    public function getRapportDeleted(Request $request): JsonResponse
+    {
+        try {
+            $data = [
+                'idUtilisateur' => $request->query->get('idUtilisateur'),
+                'idCalendrier'  => $request->query->get('idCalendrier'),
+            ];
+
+            $requiredFields = ['idUtilisateur', 'idCalendrier'];
+            $this->validatorService->validateRequiredFields($data, $requiredFields);
+
+            $idUtilisateur = $data['idUtilisateur'];
+            $idCalendrier  = $data['idCalendrier'];
+
+            $listeRapports = $this->cus->getByCalendrierAndUtilisateurDeletedAtId($idUtilisateur,$idCalendrier);
+            $listeRapportsArray= $this->cus->transformerArray($listeRapports);
+            return $this->jsonSuccess($listeRapportsArray);
+            
+        } catch (\Throwable $e) {
+			return $this->jsonError($e->getMessage(), 400);
+		} 
     }
     
 
