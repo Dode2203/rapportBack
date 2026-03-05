@@ -19,7 +19,7 @@ class CalendriersUtilisateursRepository extends ServiceEntityRepository
      * Trouver par utilisateur
      * @return CalendriersUtilisateurs[]
      */
-    public function findByUtilisateur(Utilisateurs $utilisateur, string $order = 'DESC'): array
+    public function findByUtilisateur(Utilisateurs $utilisateur, string $order = 'DESC',int $limit = 10): array
     {
         $order = strtoupper($order) === 'ASC' ? 'ASC' : 'DESC';
 
@@ -30,6 +30,7 @@ class CalendriersUtilisateursRepository extends ServiceEntityRepository
             ->andWhere('cu.deletedAt IS NULL')
             ->setParameter('utilisateur', $utilisateur)
             ->orderBy('cu.createdAt', $order)
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
     }

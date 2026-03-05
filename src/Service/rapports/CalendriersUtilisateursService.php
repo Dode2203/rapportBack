@@ -69,9 +69,9 @@ class CalendriersUtilisateursService
         return $this->repository->findOneByUtilisateurAndCalendrier($utilisateur, $calendrier);
     }
 
-    public function getByUtilisateur(Utilisateurs $utilisateur, string $order = 'DESC'): array
+    public function getByUtilisateur(Utilisateurs $utilisateur, string $order = 'DESC',int $limit = 10): array
     {
-        return $this->repository->findByUtilisateur($utilisateur, $order);
+        return $this->repository->findByUtilisateur($utilisateur, $order, $limit);
     }
 
     public function getByCalendrier(Calendriers $calendrier, string $order = 'DESC'): array

@@ -70,13 +70,19 @@ class RapportsController extends BaseApiController
     {
         try {
             $user = $this->getUserFromRequest($request);
-            $listeRapports = $this->cus->getByUtilisateur($user);
-            $listeRapportsArray= $this->cus->transformerArray($listeRapports);
+
+            // récupérer limit depuis l'URL
+            $limit = $request->query->getInt('limit', 10); // 10 par défaut
+
+            $listeRapports = $this->cus->getByUtilisateur($user, 'DESC', $limit);
+
+            $listeRapportsArray = $this->cus->transformerArray($listeRapports);
+
             return $this->jsonSuccess($listeRapportsArray);
-            
+
         } catch (\Throwable $e) {
-			return $this->jsonError($e->getMessage(), 400);
-		} 
+            return $this->jsonError($e->getMessage(), 400);
+        }
     }
     #[Route('/calendrier', name: 'api_rapports_calendrier', methods: ['GET'])]
     #[TokenRequired(['Admin','Supervisor'])]
