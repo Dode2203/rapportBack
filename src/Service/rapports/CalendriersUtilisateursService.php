@@ -218,6 +218,7 @@ class CalendriersUtilisateursService
             $this->delete($calendrierUtilisateur);
             
             $result = $this->insertRapportDto($utilisateurOvaina,$activiteCollectionDto);
+            $result->setDateValidation($calendrierUtilisateur->getDateValidation());
             $this->em->commit();
             $result = $this->getById($result->getId());
             return $result;
