@@ -143,24 +143,22 @@ class UtilisateursController extends BaseApiController
 
 
 
-        $claims = [
-            'id' => $user->getId(),
-            'email' => $user->getEmail(),
-            'role' => $user->getRole()->getName(),
-            'entite' => $user->getEntite()
-        ];
+        // $claims = [
+        //     'id' => $user->getId(),
+        //     'email' => $user->getEmail(),
+        //     'role' => $user->getRole()->getName(),
+        //     'entite' => $user->getEntite(),
+        //     'dateValidation'=> $user->getDateValidation()->format('Y-m-d H:i:s'),
+            
+        // ];
+        $claims= $user->toArray(['mdp','createdAt','deletedAt']);
 
         $tokenDuration = $this->params->get('jwt_token_duration');
 
         $token = $this->jwtManager->createToken($claims, $tokenDuration);
         $tokenString = $token->toString();
         $data = [
-            'user' => [
-                'id' => $user->getId(),
-                'email' => $user->getEmail(),
-                'role' => $user->getRole()->getName(), // ajouter role ici
-                'entite' => $user->getEntite()
-            ],
+            'user' => $claims,
             'token' => $tokenString
         ];
         return $this->jsonSuccess($data);
