@@ -2,12 +2,12 @@
 
 namespace App\Entity\utilisateurs;
 
+use App\Entity\utils\BaseValidation;
 use App\Repository\UtilisateursRepository;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\utils\BaseEntite;
 
 #[ORM\Entity(repositoryClass: UtilisateursRepository::class)]
-class Utilisateurs extends BaseEntite
+class Utilisateurs extends BaseValidation
 {
     #[ORM\Column(length: 255)]
     private ?string $email = null;

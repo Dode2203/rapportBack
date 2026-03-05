@@ -5,6 +5,7 @@ namespace App\Service\utilisateurs;
 use App\Dto\utilisateurs\UtilisateurDto;
 use App\Entity\utilisateurs\Utilisateurs;
 use App\Repository\utilisateurs\RolesRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\utilisateurs\UtilisateursRepository;
 use Exception;
@@ -153,6 +154,7 @@ class UtilisateursService
         $hashedPassword = password_hash($nouveauMdp, PASSWORD_BCRYPT);
 
         $user->setMdp($hashedPassword);
+        $user->setDateValidation(new DateTimeImmutable());
 
         $this->em->persist($user);
         $this->em->flush();
