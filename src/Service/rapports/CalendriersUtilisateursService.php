@@ -78,14 +78,19 @@ class CalendriersUtilisateursService
     {
         return $this->repository->findByCalendrier($calendrier, $order);
     }
+    public function toArray(CalendriersUtilisateurs $calendrierUtilisateur,array $exclude = []): array
+    {
+        $activites = $this->activitesService->findByCalendrierUtilisateur($calendrierUtilisateur);
+        $result = $calendrierUtilisateur->toArray($exclude);
+        $result['activites'] = $this->activitesService->transformerArray($activites, $exclude);
+        return $result;
+    }
     public function transformerArray(array $calendrierUtilisateurs): array
     {
         $result = [];
         $exclude = ['deletedAt', 'createdAt'];
         foreach ($calendrierUtilisateurs as $index => $calendrierUtilisateur) {
-            $activites = $this->activitesService->findByCalendrierUtilisateur($calendrierUtilisateur);
-            $result[$index] = $calendrierUtilisateur->toArray($exclude);
-            $result[$index]['activites'] = $this->activitesService->transformerArray($activites, $exclude);
+            $result[$index] = $this->toArray($calendrierUtilisateur, $exclude);
         }
         return $result;
     }
@@ -214,7 +219,7 @@ class CalendriersUtilisateursService
             
             $result = $this->insertRapportDto($utilisateurOvaina,$activiteCollectionDto);
             $this->em->commit();
-
+            $result = $this->getById($result->getId());
             return $result;
         } catch (\Throwable $e) {
             $this->em->rollback();

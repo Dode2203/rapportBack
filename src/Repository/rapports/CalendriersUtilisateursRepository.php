@@ -70,6 +70,10 @@ class CalendriersUtilisateursRepository extends ServiceEntityRepository
     public function findActiveById(int $id): ?CalendriersUtilisateurs
     {
         return $this->createQueryBuilder('t')
+            ->leftJoin('t.utilisateur', 'u')      // 🔥 IMPORTANT
+            ->leftJoin('t.calendrier', 'c')      // 🔥 IMPORTANT
+            ->addSelect('u')                       // 🔥 IMPORTANT
+            ->addSelect('c')                       // 🔥 IMPORTANT
             ->andWhere('t.id = :id')
             ->andWhere('t.deletedAt IS NULL')
             ->setParameter('id', $id)
