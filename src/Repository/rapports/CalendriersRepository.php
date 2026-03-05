@@ -58,6 +58,19 @@ public function findAllActive(OrderCriteria $criteria = new OrderCriteria()): ar
             ->getQuery()
             ->getResult();
     }
+    public function findDate(
+        \DateTimeInterface $date,
+        OrderCriteria $criteria = new OrderCriteria()
+    ): array {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.dateDebut <= :date')
+            ->andWhere('c.dateFin >= :date')
+            ->andWhere('c.deletedAt IS NULL')
+            ->setParameter('date', $date)
+            ->orderBy('c.' . $criteria->getField(), $criteria->getDirection())
+            ->getQuery()
+            ->getResult();
+    }
 
     /**
      * Trouver un calendrier actif par ID
@@ -71,4 +84,5 @@ public function findAllActive(OrderCriteria $criteria = new OrderCriteria()): ar
             ->getQuery()
             ->getOneOrNullResult();
     }
+    
 }

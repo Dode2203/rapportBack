@@ -244,6 +244,31 @@ class CalendriersUtilisateursService
         }
         return $this->repository->findOneByUtilisateurAndCalendrierDeletedAt($utilisateur, $calendrier);
     }
+    public function getAllCalendrierByDate(
+        Utilisateurs $utilisateurs,
+        \DateTimeInterface $date,
+        OrderCriteria $criteria
+    ): array {
 
-    
+        $calendriers = $this->calendriersService->getDate($date, $criteria);
+        $result = [];
+
+        foreach ($calendriers as $calendrier) {
+
+            $calendrierUtilisateur = $this->getByCalendrierAndUtilisateur($utilisateurs, $calendrier);
+
+            if ($calendrierUtilisateur === null) {
+                continue; // passer au calendrier suivant
+            }
+
+            $idCalendrierUtilisateur = $calendrierUtilisateur->getId();
+
+            $apidirina = $this->getById($idCalendrierUtilisateur);
+
+            $result[] = $apidirina;
+        }
+
+
+        return $result;
+    }
 }

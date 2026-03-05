@@ -105,5 +105,13 @@ class CalendriersService
         $this->em->flush();
         return $calendrier;
     }
+    public function getDate(
+        \DateTimeInterface $date,
+        OrderCriteria $criteria
+    ): array {
+        return $this->repository->findDate($date, $criteria);
+    }
+
+
     
 }

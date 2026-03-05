@@ -4,6 +4,7 @@ namespace App\Controller\Api\rapports;
 
 use App\Controller\Api\utils\BaseApiController;
 use App\Dto\rapports\ActiviteCollectionDto;
+use App\Dto\utils\OrderCriteria;
 use App\Service\rapports\CalendriersUtilisateursService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -169,6 +170,29 @@ class RapportsController extends BaseApiController
             $idCalendrier  = $data['idCalendrier'];
 
             $listeRapports = $this->cus->getByCalendrierAndUtilisateurDeletedAtId($idUtilisateur,$idCalendrier);
+            $listeRapportsArray= $this->cus->transformerArray($listeRapports);
+            return $this->jsonSuccess($listeRapportsArray);
+            
+        } catch (\Throwable $e) {
+			return $this->jsonError($e->getMessage(), 400);
+		} 
+    }
+    #[Route('/recherche', name: 'api_rapports_recherche', methods: ['GET'])]
+    #[TokenRequired]
+    public function getRapportRecherche(Request $request): JsonResponse
+    {
+        try {
+            $data = [
+                'date' => $request->query->get('date'),
+            ];
+
+            $user = $this->getUserFromRequest($request);
+            $requiredFields = ['date'];
+            $this->validatorService->validateRequiredFields($data, $requiredFields);
+
+            $date = $data['date'];
+   
+            $listeRapports = $this->cus->getAllCalendrierByDate($user, new \DateTimeImmutable($date),new OrderCriteria());
             $listeRapportsArray= $this->cus->transformerArray($listeRapports);
             return $this->jsonSuccess($listeRapportsArray);
             
