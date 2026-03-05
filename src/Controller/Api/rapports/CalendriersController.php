@@ -56,7 +56,7 @@ class CalendriersController extends BaseApiController
 
                 return $this->jsonError($erreurMessage, Response::HTTP_BAD_REQUEST);
             }
-            $user = $this->getUserFromRequest($request);
+            // $user = $this->getUserFromRequest($request);
             
             $rapportInsertArray = $this->service->insertDto($dto);
             return $this->jsonSuccess($rapportInsertArray);

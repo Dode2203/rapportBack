@@ -148,5 +148,16 @@ class UtilisateursService
         }
         return $this->utilisateurRepository->findUsersNotInCalendrier($calendrier);
     }
+    public function changerMdp(Utilisateurs $user,$nouveauMdp): Utilisateurs
+    {
+        $hashedPassword = password_hash($nouveauMdp, PASSWORD_BCRYPT);
+
+        $user->setMdp($hashedPassword);
+
+        $this->em->persist($user);
+        $this->em->flush();
+
+        return $user;
+    }
 
 }

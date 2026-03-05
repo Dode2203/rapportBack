@@ -185,4 +185,32 @@ class UtilisateursController extends BaseApiController
             return $this->jsonError($e->getMessage(), 400);
         }
     }
+    
+    #[Route('/changerMdp', name: 'user_changer_mdp', methods: ['POST'])]
+    #[TokenRequired(['Admin'])]
+    public function changerMdp(Request $request): JsonResponse
+    {
+        try {
+            $data = json_decode($request->getContent(), true);
+            $user = $this->getUserFromRequest($request);
+            $requiredFields = ['mdp'];
+            $this->validatorService->validateRequiredFields($data, $requiredFields);
+
+            $nouveauMdp = $data['mdp'];
+            $user = $this->utilisateursService->changerMdp($user, $nouveauMdp);
+            
+            return $this->jsonSuccess([
+                'message' => 'Mot de passe modifié avec succès',
+                'user' => [
+                    'id' => $user->getId(),
+                    'email' => $user->getEmail(),
+                    'role' => $user->getRole()->getName(),
+                    'entite' => $user->getEntite()
+                ]
+            ]);
+            
+        } catch (\Throwable $e) {
+            return $this->jsonError($e->getMessage(), 400);
+        }
+    }
 }
