@@ -152,9 +152,9 @@ class RapportsController extends BaseApiController
             return $this->jsonError($e->getMessage(), 400);
         }
     }
-    #[Route('/deleted', name: 'api_rapports_get_deleted', methods: ['GET'])]
+    #[Route('/historique', name: 'api_rapports_get_historique', methods: ['GET'])]
     #[TokenRequired]
-    public function getRapportDeleted(Request $request): JsonResponse
+    public function getRapportHistorique(Request $request): JsonResponse
     {
         try {
             $data = [

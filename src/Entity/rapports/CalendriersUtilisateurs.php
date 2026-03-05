@@ -37,11 +37,9 @@ class CalendriersUtilisateurs extends BaseValidation
     public function toArray(array $exclude = []): array
     {
         $data = parent::toArray($exclude);
-        $excludeUtilisateur = array_merge($exclude, ['mdp','id']);
-        // $excludeCalendrier = array_merge($exclude, ['id']);
-        $excludeCalendrier = array_merge($exclude);
+        $excludeUtilisateur = array_merge($exclude, ['mdp']);
         $data['user'] = $this->getUtilisateur()->toArray($excludeUtilisateur);
-        $data['calendrier'] = $this->getCalendrier()->toArray($excludeCalendrier);
+        $data['calendrier'] = $this->getCalendrier()->toArray($exclude);
         $statut = "EN COURS";
         if ($this->getDateValidation() !== null) {
             $statut = "VALIDE";
