@@ -187,7 +187,7 @@ class UtilisateursController extends BaseApiController
     }
     
     #[Route('/changerMdp', name: 'user_changer_mdp', methods: ['POST'])]
-    #[TokenRequired(['Admin'])]
+    #[TokenRequired]
     public function changerMdp(Request $request): JsonResponse
     {
         try {

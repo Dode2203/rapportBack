@@ -78,7 +78,7 @@ class RapportsController extends BaseApiController
 		} 
     }
     #[Route('/calendrier', name: 'api_rapports_calendrier', methods: ['GET'])]
-    // #[TokenRequired(['Admin'])]
+    #[TokenRequired(['Admin','Supervisor'])]
     public function getRapportByCalendrier(Request $request): JsonResponse
     {
         try {   
@@ -96,7 +96,7 @@ class RapportsController extends BaseApiController
 		} 
     }
     #[Route('/changerValidation', name: 'api_rapports_changer_validation', methods: ['POST'])]
-    #[TokenRequired(['Admin'])]
+    #[TokenRequired(['Admin','Supervisor'])]
     public function changerValidation(Request $request): JsonResponse
     {
         try {  
@@ -153,7 +153,7 @@ class RapportsController extends BaseApiController
         }
     }
     #[Route('/historique', name: 'api_rapports_get_historique', methods: ['GET'])]
-    #[TokenRequired]
+    #[TokenRequired(['Admin','Supervisor'])]
     public function getRapportHistorique(Request $request): JsonResponse
     {
         try {
