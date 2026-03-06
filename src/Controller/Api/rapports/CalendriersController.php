@@ -85,17 +85,25 @@ class CalendriersController extends BaseApiController
     {
         try {
             $user = $this->getUserFromRequest($request);
-            $dateDebut = new \DateTime('2026-01-01');;
-            $dateFin = new \DateTime();
+
+            $dateDebutParam = $request->query->get('dateDebut');
+ 
+            $dateDebut = $dateDebutParam ? new \DateTime($dateDebutParam) : new \DateTime('2026-01-01');
+            $dateFin =  new \DateTime();
+
             $criteria = new OrderCriteria();
-            $listeCalendriers = $this->calendriersUtilisateursService->getCalendrierDisponibleDate($user,$dateDebut,$dateFin,$criteria);
+
+            $listeCalendriers = $this->calendriersUtilisateursService
+                ->getCalendrierDisponibleDate($user, $dateDebut, $dateFin, $criteria);
+
             $exclude = ['createdAt','deletedAt'];
-            $listeCalendriersArray= $this->service->toArrayList($listeCalendriers,$exclude);
-            return $this->jsonSuccess($listeCalendriersArray);  
-            
+            $listeCalendriersArray = $this->service->toArrayList($listeCalendriers, $exclude);
+
+            return $this->jsonSuccess($listeCalendriersArray);
+
         } catch (\Throwable $e) {
-			return $this->jsonError($e->getMessage(), 400);
-		} 
+            return $this->jsonError($e->getMessage(), 400);
+        }
     }
 
 
