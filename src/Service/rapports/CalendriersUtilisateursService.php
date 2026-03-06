@@ -82,7 +82,9 @@ class CalendriersUtilisateursService
     {
         $activites = $this->activitesService->findByCalendrierUtilisateur($calendrierUtilisateur);
         $result = $calendrierUtilisateur->toArray($exclude);
-        $result['activites'] = $this->activitesService->transformerArray($activites, $exclude);
+        $excludeActivite = $exclude;
+        $excludeActivite[] = 'id';
+        $result['activites'] = $this->activitesService->transformerArray($activites, $excludeActivite);
         return $result;
     }
     public function transformerArray(array $calendrierUtilisateurs): array
