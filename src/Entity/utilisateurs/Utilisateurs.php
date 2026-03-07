@@ -23,6 +23,9 @@ class Utilisateurs extends BaseValidation
     #[ORM\JoinColumn(nullable: false)]
     private ?Roles $role = null;
 
+    #[ORM\Column(type: "integer", nullable: true)]
+    private ?int $rang = null;
+
     public function getEmail(): ?string
     {
         return $this->email;
@@ -65,6 +68,16 @@ class Utilisateurs extends BaseValidation
     public function setRole(?Roles $role): static
     {
         $this->role = $role;
+        return $this;
+    }
+    public function getRang(): ?int
+    {
+        return $this->rang;
+    }
+
+    public function setRang(?int $rang): static
+    {
+        $this->rang = $rang;
         return $this;
     }
 
