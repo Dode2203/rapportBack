@@ -138,7 +138,8 @@ class CalendriersService
         if (!$calendrier) {
             throw new \Exception("Calendrier non trouvé pour id $idCalendrier");
         }
-        $this->em->remove($calendrier);
+        $calendrier->setDeletedAt(new \DateTimeImmutable());
+        $this->em->persist($calendrier);
         $this->em->flush();
     }
 
