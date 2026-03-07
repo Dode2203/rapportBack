@@ -25,35 +25,12 @@ class RapportsController extends BaseApiController
     #[TokenRequired]
     public function createRapport(Request $request): JsonResponse
     {
-        
         try {
-            $dto = $this->serializer->deserialize(
-                $request->getContent(),
-                ActiviteCollectionDto::class,
-                'json'
+            $dto = $this->deserializeAndValidate(
+                $request,
+                ActiviteCollectionDto::class
             );
 
-            // Valider le DTO
-            $errors = $this->validator->validate($dto);
-
-            if (count($errors) > 0) {
-                // $errorMessages = [];
-                $messages = [];
-
-                foreach ($errors as $error) {
-                    $property = $error->getPropertyPath();
-                    $message = $error->getMessage();
-
-                    // erreurs par champ
-                    // $errorMessages[$property][] = $message;
-
-                    // message global
-                    $messages[] = sprintf('%s : %s', $property, $message);
-                }
-                $erreurMessage = 'Erreur de validation : ' . implode(' | ', $messages);
-
-                return $this->jsonError($erreurMessage, Response::HTTP_BAD_REQUEST);
-            }
             $user = $this->getUserFromRequest($request);
             
             $rapportInsert = $this->cus->insertRapportDto($user, $dto);
@@ -125,30 +102,10 @@ class RapportsController extends BaseApiController
     public function modifierRapport(int $idCalendrierUtilisateur, Request $request): JsonResponse
     {
         try {
-            $dto = $this->serializer->deserialize(
-                $request->getContent(),
-                ActiviteCollectionDto::class,
-                'json'
+            $dto = $this->deserializeAndValidate(
+                $request,
+                ActiviteCollectionDto::class
             );
-
-            $errors = $this->validator->validate($dto);
-
-            if (count($errors) > 0) {
-                $messages = [];
-                foreach ($errors as $error) {
-                    $messages[] = sprintf(
-                        '%s : %s',
-                        $error->getPropertyPath(),
-                        $error->getMessage()
-                    );
-                }
-
-                return $this->jsonError(
-                    'Erreur de validation : ' . implode(' | ', $messages),
-                    Response::HTTP_BAD_REQUEST
-                );
-            }
-
             $user = $this->getUserFromRequest($request);
 
             $rapportInsert = $this->cus->modifierRapport($user, $dto, $idCalendrierUtilisateur);

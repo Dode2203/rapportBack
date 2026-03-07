@@ -22,6 +22,7 @@ class ActivitesRepository extends ServiceEntityRepository
         $order = strtoupper($order) === 'ASC' ? 'ASC' : 'DESC';
 
         return $this->createQueryBuilder('s')
+        
             ->andWhere('s.calendrierUtilisateur = :calendrierUtilisateur')
             ->andWhere('s.deletedAt IS NULL')
             ->setParameter('calendrierUtilisateur', $calendrierUtilisateur)

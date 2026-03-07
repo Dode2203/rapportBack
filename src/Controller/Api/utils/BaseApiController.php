@@ -6,6 +6,7 @@ use App\Entity\utilisateurs\Utilisateurs;
 use App\Service\utilisateurs\UtilisateursService;
 use App\Service\utils\JwtTokenManager;
 use App\Service\utils\ValidationService;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Contracts\Service\Attribute\Required;
-
+use Symfony\Component\HttpFoundation\Response;
 abstract class BaseApiController extends AbstractController
 {
     public JwtTokenManager $jwtManager;
@@ -85,6 +86,33 @@ abstract class BaseApiController extends AbstractController
             'status' => 'error',
             'message' => $message
         ], $code);
+    }
+    
+    protected function deserializeAndValidate(Request $request, string $dtoClass)
+    {
+        $dto = $this->serializer->deserialize(
+            $request->getContent(),
+            $dtoClass,
+            'json'
+        );
+
+        $errors = $this->validator->validate($dto);
+
+        if (count($errors) > 0) {
+            $messages = [];
+
+            foreach ($errors as $error) {
+                $property = $error->getPropertyPath();
+                $message = $error->getMessage();
+                $messages[] = sprintf('%s : %s', $property, $message);
+            }
+
+            $erreurMessage = 'Erreur de validation : ' . implode(' | ', $messages);
+
+            throw new Exception($erreurMessage);
+        }
+
+        return $dto;
     }
 
 }

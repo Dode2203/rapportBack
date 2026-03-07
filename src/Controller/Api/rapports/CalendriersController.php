@@ -29,34 +29,10 @@ class CalendriersController extends BaseApiController
     {
         
         try {
-            $dto = $this->serializer->deserialize(
-                $request->getContent(),
-                CalendrierDto::class,
-                'json'
+            $dto = $this->deserializeAndValidate(
+                $request,
+                CalendrierDto::class
             );
-
-            // Valider le DTO
-            $errors = $this->validator->validate($dto);
-
-            if (count($errors) > 0) {
-                // $errorMessages = [];
-                $messages = [];
-
-                foreach ($errors as $error) {
-                    $property = $error->getPropertyPath();
-                    $message = $error->getMessage();
-
-                    // erreurs par champ
-                    // $errorMessages[$property][] = $message;
-
-                    // message global
-                    $messages[] = sprintf('%s : %s', $property, $message);
-                }
-                $erreurMessage = 'Erreur de validation : ' . implode(' | ', $messages);
-
-                return $this->jsonError($erreurMessage, Response::HTTP_BAD_REQUEST);
-            }
-            // $user = $this->getUserFromRequest($request);
             
             $rapportInsertArray = $this->service->insertDto($dto);
             return $this->jsonSuccess($rapportInsertArray);
@@ -67,17 +43,34 @@ class CalendriersController extends BaseApiController
     }
     #[Route('', name: 'api_get_calendriers', methods: ['GET'])]
     #[TokenRequired]
-    public function getCalendriers(): JsonResponse
+    public function getCalendriers(Request $request): JsonResponse
     {
         try {
-            $listeCalendriers = $this->service->getAll(new OrderCriteria());
-            $exclude = ['createdAt','deletedAt'];
-            $listeCalendriersArray= $this->service->toArrayList($listeCalendriers,$exclude);
+            // 1. Extraction des variables brutes du request et du .env
+            $rawDateDebut = $request->query->get('dateDebut');
+            $rawDateFin = $request->query->get('dateFin');
+            $monthOffset = $_ENV['CALENDAR_MONTH_OFFSET'] ?? 2;
+
+            // 2. Traitement logique avec opérateurs ternaires
+            $dateDebut = $rawDateDebut 
+                ? new \DateTime($rawDateDebut) 
+                : (new \DateTime())->modify("-$monthOffset months")->setTime(0, 0, 0);
+
+            $dateFin = $rawDateFin 
+                ? new \DateTime($rawDateFin) 
+                : (new \DateTime())->setTime(23, 59, 59);
+
+            // 3. Appel au service
+            $listeCalendriers = $this->service->getBetweenDates($dateDebut, $dateFin, new OrderCriteria());
+            
+            $exclude = ['createdAt', 'deletedAt'];
+            $listeCalendriersArray = $this->service->toArrayList($listeCalendriers, $exclude);
+            
             return $this->jsonSuccess($listeCalendriersArray);  
             
         } catch (\Throwable $e) {
-			return $this->jsonError($e->getMessage(), 400);
-		} 
+            return $this->jsonError($e->getMessage(), 400);
+        } 
     }
     #[Route('/utilisateur', name: 'api_get_calendriers_utilisateur_disponible', methods: ['GET'])]
     #[TokenRequired]
@@ -88,7 +81,11 @@ class CalendriersController extends BaseApiController
 
             $dateDebutParam = $request->query->get('dateDebut');
  
-            $dateDebut = $dateDebutParam ? new \DateTime($dateDebutParam) : new \DateTime('2026-01-01');
+            $monthOffset = $_ENV['CALENDAR_MONTH_OFFSET'] ?? 2;
+
+            $dateDebut = $dateDebutParam 
+                ? new \DateTime($dateDebutParam) 
+                : (new \DateTime())->modify("-$monthOffset months")->setTime(0, 0, 0);
             $dateFin =  new \DateTime();
 
             $criteria = new OrderCriteria();
@@ -105,6 +102,34 @@ class CalendriersController extends BaseApiController
             return $this->jsonError($e->getMessage(), 400);
         }
     }
+    #[Route('/{id}', name: 'api_update_calendrier', methods: ['PUT'])]
+    #[TokenRequired(['Admin'])]
+    public function updateCalendrier(Request $request, int $id): JsonResponse
+    {
+        try {   
+            $dto = $this->deserializeAndValidate(
+                $request,
+                CalendrierDto::class
+            );
+            $calendrier = $this->service->updateCalendrierDto($id, $dto);
+            return $this->jsonSuccess($calendrier->toArray());
+        } catch (\Throwable $e) {
+            return $this->jsonError($e->getMessage(), 400);
+        }
+    }
+    #[Route('/{id}', name: 'api_delete_calendrier', methods: ['DELETE'])]
+    #[TokenRequired(['Admin'])]
+    public function deleteCalendrier(int $id): JsonResponse
+    {
+        try {
+            $this->service->deleted($id);
+
+            return $this->jsonSuccess('Calendrier supprimé avec succès', 200);
+        } catch (\Throwable $e) {
+            return $this->jsonError($e->getMessage(), 400);
+        }
+    }
+
 
 
 }

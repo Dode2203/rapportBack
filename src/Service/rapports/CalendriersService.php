@@ -111,6 +111,36 @@ class CalendriersService
     ): array {
         return $this->repository->findDate($date, $criteria);
     }
+    public function updateCalendrier(Calendriers $calendrier,CalendrierDto $dto ): Calendriers
+    {
+        $calendrier->setDateDebut($dto->getDateDebut());
+        $calendrier->setDateFin($dto->getDateFin());
+        $typeCalendrier = $this->typeCalendriersService->getById($dto->getTypeCalendrierId());
+        if (!$typeCalendrier) {
+            throw new \Exception('Type de calendrier non trouvé pour id ' . $dto->getTypeCalendrierId());
+        }
+        $calendrier->setTypeCalendriers($typeCalendrier);
+        $this->em->persist($calendrier);
+        $this->em->flush();
+        return $calendrier;
+    }
+    public function updateCalendrierDto(int $idCalendrier , CalendrierDto $calendrierDto): Calendriers
+    {
+        $calendrier = $this->getById($idCalendrier);
+        if (!$calendrier) {
+            throw new \Exception('Calendrier non trouvé pour id ' . $idCalendrier);
+        }
+        return $this->updateCalendrier($calendrier, $calendrierDto);
+    }
+    public function deleted(int $idCalendrier): void
+    {
+        $calendrier = $this->getById($idCalendrier);
+        if (!$calendrier) {
+            throw new \Exception("Calendrier non trouvé pour id $idCalendrier");
+        }
+        $this->em->remove($calendrier);
+        $this->em->flush();
+    }
 
 
     
