@@ -26,6 +26,12 @@ class Utilisateurs extends BaseValidation
     #[ORM\Column(type: "integer", nullable: true)]
     private ?int $rang = null;
 
+    
+    #[ORM\Column(type: "string", nullable: true)]
+    private ?string $sigle = null;
+
+    
+
     public function getEmail(): ?string
     {
         return $this->email;
@@ -81,11 +87,26 @@ class Utilisateurs extends BaseValidation
         return $this;
     }
 
-    public function toArray(array $exclude = []): array
+    public function toArray(array $exclude = [], bool $includeIdRole = false): array
     {
         $data = parent::toArray($exclude);
-        // $data['entite'] = $this->getEntite();
+
         $data['role'] = $this->getRole() ? $this->getRole()->getName() : null;
+
+        if ($includeIdRole) {
+            $data['idRole'] = $this->getRole() ? $this->getRole()->getId() : null;
+        }
+
         return $data;
+    }
+    public function getSigle(): ?string
+    {
+        return $this->sigle;
+    }
+    
+    public function setSigle(?string $sigle): static
+    {
+        $this->sigle = $sigle;
+        return $this;
     }
 }

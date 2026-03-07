@@ -36,10 +36,33 @@ class UtilisateursController extends BaseApiController
     {
 
         try {
-            $dto = $this->deserializeAndValidate(
-                $request,
-                UtilisateurDto::class
+            $dto = $this->serializer->deserialize(
+                $request->getContent(),
+                UtilisateurDto::class,
+                'json'
             );
+
+            // Valider le DTO
+            $errors = $this->validator->validate($dto);
+
+            if (count($errors) > 0) {
+                // $errorMessages = [];
+                $messages = [];
+
+                foreach ($errors as $error) {
+                    $property = $error->getPropertyPath();
+                    $message = $error->getMessage();
+
+                    // erreurs par champ
+                    // $errorMessages[$property][] = $message;
+
+                    // message global
+                    $messages[] = sprintf('%s : %s', $property, $message);
+                }
+                $erreurMessage = 'Erreur de validation : ' . implode(' | ', $messages);
+
+                return $this->jsonError($erreurMessage, Response::HTTP_BAD_REQUEST);
+            }
 
             $userArray = $this->utilisateursService->insertDto($dto);
             return $this->jsonSuccess($userArray);
@@ -58,7 +81,7 @@ class UtilisateursController extends BaseApiController
         if (!$user) {
             return $this->jsonError("Utilisateur non trouvé", 404);
         }
-        $userArray = $user->toArray();
+        $userArray = $user->toArray([], true);
         return $this->jsonSuccess($userArray);
     }
 

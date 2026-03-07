@@ -92,6 +92,9 @@ class UtilisateursService
         if (isset($data['rang'])) {
             $user->setRang($data['rang']);
         }
+        if (isset($data['sigle'])) {
+            $user->setSigle($data['sigle']);
+        }
         
         $this->em->flush();
 
@@ -134,6 +137,7 @@ class UtilisateursService
             throw new Exception("Role non trouvé pour id=" . $utilisateurDto->getIdRole());
         }
         $result->setRole($role);
+        $result->setSigle($utilisateurDto->getSigle());
         $result = $this->createUserByRole($result);
         return $result;
     }
