@@ -88,7 +88,11 @@ class UtilisateursService
             $hashedPassword = password_hash($data['mdp'], PASSWORD_BCRYPT);
             $user->setMdp($hashedPassword);
         }
-
+        
+        if (isset($data['rang'])) {
+            $user->setRang($data['rang']);
+        }
+        
         $this->em->flush();
 
         return $user;
@@ -124,6 +128,7 @@ class UtilisateursService
         $result->setEmail($utilisateurDto->getEmail());
         $result->setMdp($utilisateurDto->getMdp());
         $result->setEntite($utilisateurDto->getEntite());
+        $result->setRang($utilisateurDto->getRang());
         $role = $this->roleRepository->find($utilisateurDto->getIdRole());
         if (!$role) {
             throw new Exception("Role non trouvé pour id=" . $utilisateurDto->getIdRole());

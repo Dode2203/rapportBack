@@ -28,6 +28,9 @@ class UtilisateurDto
     #[Assert\Positive(message: "L'identifiant du rôle doit être positif.")]
     public ?int $idRole = null;
 
+    #[Assert\Positive(message: "Le rang doit être positif.")]
+    public ?int $rang = null;
+
     // ===== GETTERS =====
 
     public function getEmail(): ?string
@@ -48,5 +51,10 @@ class UtilisateurDto
     public function getIdRole(): ?int
     {
         return $this->idRole;
+    }
+
+    public function getRang(): ?int
+    {
+        return $this->rang;
     }
 }
