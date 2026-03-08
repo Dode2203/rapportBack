@@ -142,6 +142,13 @@ class CalendriersService
         $this->em->persist($calendrier);
         $this->em->flush();
     }
+    public function getBetweenDatesDebut(
+        \DateTimeInterface $debut,
+        \DateTimeInterface $fin,
+        OrderCriteria $criteria
+    ): array {
+        return $this->repository->findBetweenDatesDebut($debut, $fin, $criteria);
+    }
 
 
     

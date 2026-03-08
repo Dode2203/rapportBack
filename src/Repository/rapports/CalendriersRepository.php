@@ -84,5 +84,20 @@ public function findAllActive(OrderCriteria $criteria = new OrderCriteria()): ar
             ->getQuery()
             ->getOneOrNullResult();
     }
+    public function findBetweenDatesDebut(
+        \DateTimeInterface $debut,
+        \DateTimeInterface $fin,
+        OrderCriteria $criteria = new OrderCriteria()
+    ): array {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.dateDebut >= :debut')
+            ->andWhere('c.dateDebut <= :fin')
+            ->andWhere('c.deletedAt IS NULL')
+            ->setParameter('debut', $debut)
+            ->setParameter('fin', $fin)
+            ->orderBy('c.' . $criteria->getField(), $criteria->getDirection())
+            ->getQuery()
+            ->getResult();
+    }
     
 }

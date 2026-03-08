@@ -160,10 +160,10 @@ class CalendriersUtilisateursService
         }
         return $result;
     }
-    public function getCalendrierDisponibleDate(Utilisateurs $utilisateurs,\DateTimeInterface $dateDebut,\DateTimeInterface $dateFin,OrderCriteria $criteria):array
+    public function getCalendrierDisponibleDate(Utilisateurs $utilisateur,\DateTimeInterface $date,OrderCriteria $criteria):array
     {
-        $calendriers = $this->calendriersService->getBetweenDates($dateDebut,$dateFin,$criteria);
-        return $this->getAllCalendrierDisponible($utilisateurs,$calendriers);
+        $calendriers = $this->calendriersService->getDate($date, $criteria);
+        return $this->getAllCalendrierDisponible($utilisateur,$calendriers);
     }
     public function getById(int $idCalendrierUtilisateur): CalendriersUtilisateurs
     {

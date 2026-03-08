@@ -61,7 +61,7 @@ class CalendriersController extends BaseApiController
                 : (new \DateTime())->setTime(23, 59, 59);
 
             // 3. Appel au service
-            $listeCalendriers = $this->service->getBetweenDates($dateDebut, $dateFin, new OrderCriteria());
+            $listeCalendriers = $this->service->getBetweenDatesDebut($dateDebut, $dateFin, new OrderCriteria());
             
             $exclude = ['createdAt', 'deletedAt'];
             $listeCalendriersArray = $this->service->toArrayList($listeCalendriers, $exclude);
@@ -79,19 +79,14 @@ class CalendriersController extends BaseApiController
         try {
             $user = $this->getUserFromRequest($request);
 
-            $dateDebutParam = $request->query->get('dateDebut');
- 
-            $monthOffset = $_ENV['CALENDAR_MONTH_OFFSET'] ?? 2;
-
-            $dateDebut = $dateDebutParam 
-                ? new \DateTime($dateDebutParam) 
-                : (new \DateTime())->modify("-$monthOffset months")->setTime(0, 0, 0);
-            $dateFin =  new \DateTime();
+            
+            
+            $date =  new \DateTime();
 
             $criteria = new OrderCriteria();
 
             $listeCalendriers = $this->calendriersUtilisateursService
-                ->getCalendrierDisponibleDate($user, $dateDebut, $dateFin, $criteria);
+                ->getCalendrierDisponibleDate($user, $date, $criteria);
 
             $exclude = ['createdAt','deletedAt'];
             $listeCalendriersArray = $this->service->toArrayList($listeCalendriers, $exclude);
