@@ -15,7 +15,7 @@ use App\Dto\utils\OrderCriteria;
 class UtilisateursController extends BaseApiController
 {
     #[Route('', name: 'user', methods: ['GET'])]
-    #[TokenRequired(['Admin'])]
+    #[TokenRequired(['Admin','Supervisor'])]
     public function getUtilisateur(Request $request): JsonResponse
     {
         try {
@@ -164,7 +164,7 @@ class UtilisateursController extends BaseApiController
         return $this->jsonSuccess($data);
     }
     #[Route('/calendrierRetard', name: 'user_calendrier_retard', methods: ['GET'])]
-    // #[TokenRequired(['Admin'])]
+    #[TokenRequired(['Admin','Supervisor'])]
     public function getUtilisateurCalendrierRetard(Request $request): JsonResponse
     {
         try {

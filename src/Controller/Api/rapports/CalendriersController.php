@@ -24,7 +24,7 @@ class CalendriersController extends BaseApiController
         $this->calendriersUtilisateursService = $calendriersUtilisateursService;
     }
     #[Route('', name: 'api_calendriers_create', methods: ['POST'])]
-    #[TokenRequired(['Admin'])]
+    #[TokenRequired(['Admin','Supervisor'])]
     public function createCalendrier(Request $request): JsonResponse
     {
         
@@ -98,7 +98,7 @@ class CalendriersController extends BaseApiController
         }
     }
     #[Route('/{id}', name: 'api_update_calendrier', methods: ['PUT'])]
-    #[TokenRequired(['Admin'])]
+    #[TokenRequired(['Admin','Supervisor'])]
     public function updateCalendrier(Request $request, int $id): JsonResponse
     {
         try {   
@@ -113,7 +113,7 @@ class CalendriersController extends BaseApiController
         }
     }
     #[Route('/{id}', name: 'api_delete_calendrier', methods: ['DELETE'])]
-    #[TokenRequired(['Admin'])]
+    #[TokenRequired(['Admin','Supervisor'])]
     public function deleteCalendrier(int $id): JsonResponse
     {
         try {
