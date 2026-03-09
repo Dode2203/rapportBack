@@ -81,7 +81,8 @@ class CalendriersUtilisateursService
     public function toArray(CalendriersUtilisateurs $calendrierUtilisateur,array $exclude = []): array
     {
         $activites = $this->activitesService->findByCalendrierUtilisateur($calendrierUtilisateur);
-        $result = $calendrierUtilisateur->toArray($exclude);
+        $excludeRapport = array_diff($exclude, ['deletedAt']);
+        $result = $calendrierUtilisateur->toArray($excludeRapport); 
         $excludeActivite = $exclude;
         $excludeActivite[] = 'id';
         $result['activites'] = $this->activitesService->transformerArray($activites, $excludeActivite);
