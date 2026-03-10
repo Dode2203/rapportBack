@@ -166,7 +166,7 @@ class CalendriersUtilisateursService
         $calendriers = $this->calendriersService->getDate($date, $criteria);
         return $this->getAllCalendrierDisponible($utilisateur,$calendriers);
     }
-    public function getById(int $idCalendrierUtilisateur): CalendriersUtilisateurs
+    public function getById(int $idCalendrierUtilisateur): ?CalendriersUtilisateurs
     {
         return $this->repository->findActiveById($idCalendrierUtilisateur);
     }
