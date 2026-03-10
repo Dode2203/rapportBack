@@ -174,7 +174,7 @@ class CalendriersUtilisateursService
     {
         $calendrierUtilisateur = $this->getById($idCalendrierUtilisateur);
         if (!$calendrierUtilisateur) {  
-            throw new Exception("Le calendrier utilisateur n'existe pas pour id=" . $idCalendrierUtilisateur);
+            throw new Exception("Le calendrier utilisateur deja modifer pour id=" . $idCalendrierUtilisateur. "veuillez actualiser la page");
         }
         return $calendrierUtilisateur;
     }
